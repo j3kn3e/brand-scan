@@ -1,0 +1,6 @@
+{
+  "functions": {
+    "api/claude.js": { "maxDuration": 120 },
+    "api/tinyfish.js": { "maxDuration": 120 }
+  }
+}

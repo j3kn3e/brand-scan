@@ -1,0 +1,120 @@
+{
+  "brand": "Duolingo",
+  "url": "https://www.duolingo.com/",
+  "style": "Playful-core, character-led, gamified",
+  "colours": [
+    {
+      "name": "Feather Green",
+      "hex": "#58CC02",
+      "role": "primary brand",
+      "source": "Duolingo guidelines (via brand atlas)"
+    },
+    {
+      "name": "Mask Green",
+      "hex": "#89E219",
+      "role": "accent / background behind Duo",
+      "source": "Duolingo guidelines (via brand atlas)"
+    },
+    {
+      "name": "Eel",
+      "hex": "#4B4B4B",
+      "role": "typography",
+      "source": "Duolingo guidelines (via brand atlas)"
+    },
+    {
+      "name": "Snow",
+      "hex": "#FFFFFF",
+      "role": "primary background",
+      "source": "Duolingo guidelines (via brand atlas)"
+    },
+    {
+      "name": "Macaw",
+      "hex": "#1CB0F6",
+      "role": "secondary",
+      "source": "named in guidelines; hex not re-verified this run"
+    },
+    {
+      "name": "Cardinal",
+      "hex": "#FF4B4B",
+      "role": "secondary",
+      "source": "named in guidelines; hex not re-verified this run"
+    },
+    {
+      "name": "Bee",
+      "hex": "#FFC800",
+      "role": "secondary",
+      "source": "named in guidelines; hex not re-verified this run"
+    },
+    {
+      "name": "Fox",
+      "hex": "#FF9600",
+      "role": "secondary",
+      "source": "named in guidelines; hex not re-verified this run"
+    }
+  ],
+  "typography": {
+    "display": {
+      "family": "Feather Bold",
+      "notes": "Bespoke; lowercase only; headlines",
+      "source": "guidelines"
+    },
+    "body": {
+      "family": "DIN Next Rounded",
+      "notes": "Sentence case; never mixed with Feather in one sentence",
+      "source": "guidelines"
+    },
+    "web_stand_in": "Nunito"
+  },
+  "logo": {
+    "type": "Wordmark in Feather Bold + Duo the owl mascot",
+    "rules": [
+      "'g' flick echoes Duo's eyebrows",
+      "Mascot drawn for emotional range",
+      "When in doubt, lean in to green"
+    ],
+    "assets": [
+      "https://www.duolingo.com/images/facebook/duo200.png"
+    ]
+  },
+  "ui": {
+    "theme": "Light (Snow); flat colour, chunky rounded shapes",
+    "pattern": "Character-led illustration; progress and streaks surfaced prominently; simple repeated nav",
+    "note": "Homepage is JS-rendered (Fetch returned empty_content) \u2192 Agent fallback"
+  },
+  "voice": {
+    "traits": [
+      "expressive",
+      "playful",
+      "embracing",
+      "worldly"
+    ],
+    "messaging": [
+      "Learn a language for free"
+    ],
+    "pattern": "Celebrates small wins; teases via Duo, never the learner; avoids slang that won't translate"
+  },
+  "business": {
+    "model": "Freemium: free app with ads \u2192 Super / Max subscriptions",
+    "streams": [
+      "Subscriptions (Super, Max)",
+      "Advertising",
+      "Duolingo English Test",
+      "In-app purchases"
+    ],
+    "metrics": {
+      "period": "Q2 2026",
+      "DAUs": "58.7m (+23%)",
+      "MAUs": "140.6m (+10%)",
+      "paid_subscribers": "12.7m (+17%)",
+      "revenue": "$298.5m (+18%)",
+      "gross_margin": "72.6%",
+      "adj_EBITDA": "$77.3m"
+    },
+    "next": "FY26 guide ~$1.207bn revenue; 84% next-day retention; target 100m DAUs by 2028",
+    "source": "https://pulse2.com/duolingo-daily-active-users-reach-58-7-million-as-retention-hits-record-84-and-social-accounts-top-1-billion-organic-impressions/"
+  },
+  "sources": [
+    "https://www.duolingo.com/",
+    "https://www.canny-creative.com/atlas/brand/duolingo/"
+  ]
+}

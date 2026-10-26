@@ -1,0 +1,47 @@
+{
+  "spotify": {
+    "color": {
+      "spotify-green": {
+        "$type": "color",
+        "$value": "#1ED760",
+        "$description": "primary CTA, ticks, selected state"
+      },
+      "black": {
+        "$type": "color",
+        "$value": "#000000",
+        "$description": "background, theme-color, text on green"
+      },
+      "card": {
+        "$type": "color",
+        "$value": "#1F1F1F",
+        "$description": "surface"
+      },
+      "raised": {
+        "$type": "color",
+        "$value": "#2A2A2A",
+        "$description": "raised surface, badges"
+      },
+      "white": {
+        "$type": "color",
+        "$value": "#FFFFFF",
+        "$description": "primary text"
+      },
+      "subdued": {
+        "$type": "color",
+        "$value": "#B3B3B3",
+        "$description": "secondary text"
+      },
+      "platinum": {
+        "$type": "color",
+        "$value": "#F6F609",
+        "$description": "plan-tier accent"
+      },
+      "mint": {
+        "$type": "color",
+        "$value": "#C5F0C9",
+        "$description": "plan-tier accent"
+      }
+    },
+    "font": {}
+  }
+}

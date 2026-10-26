@@ -1,0 +1,8 @@
+{
+  "name": "brand-scan",
+  "private": true,
+  "type": "module",
+  "description": "Turn a URL or company name into a brand guide, read live with TinyFish and written by Claude.",
+  "scripts": { "dev": "node server.mjs" },
+  "engines": { "node": ">=20" }
+}

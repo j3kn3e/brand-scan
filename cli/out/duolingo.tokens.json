@@ -1,0 +1,47 @@
+{
+  "duolingo": {
+    "color": {
+      "feather-green": {
+        "$type": "color",
+        "$value": "#58CC02",
+        "$description": "primary brand"
+      },
+      "mask-green": {
+        "$type": "color",
+        "$value": "#89E219",
+        "$description": "accent / background behind Duo"
+      },
+      "eel": {
+        "$type": "color",
+        "$value": "#4B4B4B",
+        "$description": "typography"
+      },
+      "snow": {
+        "$type": "color",
+        "$value": "#FFFFFF",
+        "$description": "primary background"
+      },
+      "macaw": {
+        "$type": "color",
+        "$value": "#1CB0F6",
+        "$description": "secondary"
+      },
+      "cardinal": {
+        "$type": "color",
+        "$value": "#FF4B4B",
+        "$description": "secondary"
+      },
+      "bee": {
+        "$type": "color",
+        "$value": "#FFC800",
+        "$description": "secondary"
+      },
+      "fox": {
+        "$type": "color",
+        "$value": "#FF9600",
+        "$description": "secondary"
+      }
+    },
+    "font": {}
+  }
+}

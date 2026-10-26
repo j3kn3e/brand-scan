@@ -1,0 +1,135 @@
+[
+  {
+    "brand": "Revolut",
+    "url": "https://www.revolut.com/",
+    "style": "Fintech-minimal, monochrome-core, premium",
+    "colours": [
+      {"name": "Revolut Black", "hex": "#000000", "role": "primary · logo, type", "source": "official guidelines PDF"},
+      {"name": "White", "hex": "#FFFFFF", "role": "primary · background, theme-color", "source": "official guidelines PDF + html head"},
+      {"name": "UI Black", "hex": "#191C1F", "role": "UI dark / tile + mask-icon colour", "source": "html head"},
+      {"name": "Deep Blue", "hex": "#1326FD", "role": "core brand blue", "source": "official guidelines PDF"},
+      {"name": "Mid Blue", "hex": "#6FA0FF", "role": "secondary", "source": "official guidelines PDF"},
+      {"name": "Light Blue", "hex": "#C6D9FD", "role": "secondary", "source": "official guidelines PDF"},
+      {"name": "Purple", "hex": "#9539F2", "role": "accent", "source": "official guidelines PDF"},
+      {"name": "Lime", "hex": "#BFFF37", "role": "accent ('wow' highlights)", "source": "official guidelines PDF"}
+    ],
+    "typography": {
+      "display": {"family": "Aeonik Pro", "weights": ["Black", "Black-Capitalised", "Medium", "Regular"], "source": "live font preloads"},
+      "ui": {"family": "Inter", "weights": ["Regular", "Medium", "SemiBold"], "source": "live font preloads"},
+      "web_stand_in": "Manrope (display) + Inter"
+    },
+    "logo": {
+      "type": "Wordmark (primary) + 'R' monogram for the app icon",
+      "rules": ["Never lock up wordmark and icon together", "Revolut Black or White only", "Min size 80px / 25mm", "Clear space = width of the 'R'"],
+      "assets": ["https://assets.revolut.com/Brand/Retail/Logos/Wordmark/Revolut_Black.svg", "https://assets.revolut.com/Brand/Retail/Logos/Wordmark/Revolut_White.svg"]
+    },
+    "ui": {
+      "theme": "Light (theme-color #FFFFFF), monochrome chrome",
+      "hero": "Full-bleed photography (3840px hero images preloaded)",
+      "pattern": "Headline + one CTA per section; heavy social proof (ratings, awards)"
+    },
+    "voice": {
+      "traits": ["confident", "aspirational", "compact"],
+      "signals": {"avg_sentence_words": 5.2, "second_person_per_100_words": 9.5},
+      "messaging": ["Banking & Beyond", "This is your bank, redefined.", "Your salary, reimagined", "Life, meets savings", "Ask, and AIR makes it happen"],
+      "pattern": "Two-to-four-word headlines that twist a familiar phrase ('X, reimagined')"
+    },
+    "business": {
+      "model": "Freemium finance super-app",
+      "streams": ["Paid plans (Plus → Ultra)", "Card interchange", "FX", "Interest on balances", "Trading & crypto fees", "Business banking (16% of income)"],
+      "metrics": {"period": "FY2025", "revenue": "$6.0bn (+46%)", "pretax_profit": "$2.3bn (+57%)", "retail_customers": "68.3m (+30%)", "business_customers": "767k", "balances": "$67.5bn (+66%)"},
+      "next": "Full UK banking licence (Mar 2026) → lending; US bank charter filed; target 100m customers by mid-2027",
+      "source": "https://www.cnbc.com/2026/03/24/revolut-2025-earnings-record-profit.html"
+    },
+    "sources": ["https://www.revolut.com/", "https://developer.revolut.com/docs/resources/open-banking-logo-guidelines", "https://developer.revolut.com/assets/oba/Revolut-Open-Banking-guidelines.pdf"]
+  },
+  {
+    "brand": "Spotify",
+    "url": "https://www.spotify.com/uk/premium/",
+    "style": "Dark-mode-core, bold, playful-premium",
+    "colours": [
+      {"name": "Spotify Green", "hex": "#1ED760", "role": "primary CTA, ticks, selected state", "source": "live CSS --color-spotify-green"},
+      {"name": "Black", "hex": "#000000", "role": "background, theme-color, text on green", "source": "live CSS + html head"},
+      {"name": "Card", "hex": "#1F1F1F", "role": "surface", "source": "live CSS --color-bg-card"},
+      {"name": "Raised", "hex": "#2A2A2A", "role": "raised surface, badges", "source": "live CSS --color-bg-badge"},
+      {"name": "White", "hex": "#FFFFFF", "role": "primary text", "source": "live CSS --color-text-primary"},
+      {"name": "Subdued", "hex": "#B3B3B3", "role": "secondary text", "source": "live CSS --color-text-secondary"},
+      {"name": "Platinum", "hex": "#F6F609", "role": "plan-tier accent", "source": "live CSS --color-plan-platinum"},
+      {"name": "Mint", "hex": "#C5F0C9", "role": "plan-tier accent", "source": "live CSS --color-bg-premium-basic"}
+    ],
+    "typography": {
+      "display": {"family": "Spotify proprietary sans", "weights": ["700"], "source": "live site"},
+      "partner_fallback": ["platform default sans", "Helvetica Neue", "Helvetica", "Arial"],
+      "web_stand_in": "Figtree"
+    },
+    "logo": {
+      "type": "Combination mark: circle icon with three sound waves + wordmark",
+      "rules": ["Green logo only on black or white; otherwise mono", "Min 70px digital / 20mm print (icon 21px)", "Clear space = ½ icon height", "Wordmark never without the icon"],
+      "assets": ["https://developer-assets.spotifycdn.com/images/guidelines/design/logo.svg"]
+    },
+    "ui": {
+      "theme": "Dark; elevation by tone (#000 → #1F1F1F → #2A2A2A), no shadows",
+      "buttons": "Pill (border-radius 500px), black text on green",
+      "cards": "16px radius",
+      "container": "max 1408px; section rhythm 128–256px",
+      "hero": "Video hero masked through the logo; huge left-aligned display type",
+      "artwork_radius": "4px small/medium devices, 8px large"
+    },
+    "voice": {
+      "traits": ["punchy", "benefit-first", "casual"],
+      "messaging": ["Try 1 month for £0", "All the music, without all the ads.", "Just non-stop beats."],
+      "pattern": "Price-led CTAs; short benefit lines with a casual tag"
+    },
+    "business": {
+      "model": "Freemium: ad-supported Free tier funnels to Premium",
+      "streams": ["Premium subscriptions (Individual £12.99, Student £5.99, Duo £17.99, Family £21.99)", "Advertising", "Audiobooks+ add-on (1.5m subs)", "Live: Reserved ticket access"],
+      "metrics": {"period": "Q2 2026", "premium_subscribers": "300m (+9%)", "MAUs": "777m (+12%)", "revenue": "€4.8bn (+14%)", "gross_margin": "33.4%", "operating_income": "€655m"},
+      "next": "AI personalisation (Talk to Spotify, Personal Podcasts, Running Mode); thin margins because label royalties dominate costs",
+      "source": "https://newsroom.spotify.com/2026-08-04/spotify-q2-2026-earnings/"
+    },
+    "sources": ["https://www.spotify.com/uk/premium/", "https://wwwmarketing.scdn.co/_next/static/css/20b110d55c34bb2f.css", "https://developer.spotify.com/documentation/design"]
+  },
+  {
+    "brand": "Duolingo",
+    "url": "https://www.duolingo.com/",
+    "style": "Playful-core, character-led, gamified",
+    "colours": [
+      {"name": "Feather Green", "hex": "#58CC02", "role": "primary brand", "source": "Duolingo guidelines (via brand atlas)"},
+      {"name": "Mask Green", "hex": "#89E219", "role": "accent / background behind Duo", "source": "Duolingo guidelines (via brand atlas)"},
+      {"name": "Eel", "hex": "#4B4B4B", "role": "typography", "source": "Duolingo guidelines (via brand atlas)"},
+      {"name": "Snow", "hex": "#FFFFFF", "role": "primary background", "source": "Duolingo guidelines (via brand atlas)"},
+      {"name": "Macaw", "hex": "#1CB0F6", "role": "secondary", "source": "named in guidelines; hex not re-verified this run"},
+      {"name": "Cardinal", "hex": "#FF4B4B", "role": "secondary", "source": "named in guidelines; hex not re-verified this run"},
+      {"name": "Bee", "hex": "#FFC800", "role": "secondary", "source": "named in guidelines; hex not re-verified this run"},
+      {"name": "Fox", "hex": "#FF9600", "role": "secondary", "source": "named in guidelines; hex not re-verified this run"}
+    ],
+    "typography": {
+      "display": {"family": "Feather Bold", "notes": "Bespoke; lowercase only; headlines", "source": "guidelines"},
+      "body": {"family": "DIN Next Rounded", "notes": "Sentence case; never mixed with Feather in one sentence", "source": "guidelines"},
+      "web_stand_in": "Nunito"
+    },
+    "logo": {
+      "type": "Wordmark in Feather Bold + Duo the owl mascot",
+      "rules": ["'g' flick echoes Duo's eyebrows", "Mascot drawn for emotional range", "When in doubt, lean in to green"],
+      "assets": ["https://www.duolingo.com/images/facebook/duo200.png"]
+    },
+    "ui": {
+      "theme": "Light (Snow); flat colour, chunky rounded shapes",
+      "pattern": "Character-led illustration; progress and streaks surfaced prominently; simple repeated nav",
+      "note": "Homepage is JS-rendered (Fetch returned empty_content) → Agent fallback"
+    },
+    "voice": {
+      "traits": ["expressive", "playful", "embracing", "worldly"],
+      "messaging": ["Learn a language for free"],
+      "pattern": "Celebrates small wins; teases via Duo, never the learner; avoids slang that won't translate"
+    },
+    "business": {
+      "model": "Freemium: free app with ads → Super / Max subscriptions",
+      "streams": ["Subscriptions (Super, Max)", "Advertising", "Duolingo English Test", "In-app purchases"],
+      "metrics": {"period": "Q2 2026", "DAUs": "58.7m (+23%)", "MAUs": "140.6m (+10%)", "paid_subscribers": "12.7m (+17%)", "revenue": "$298.5m (+18%)", "gross_margin": "72.6%", "adj_EBITDA": "$77.3m"},
+      "next": "FY26 guide ~$1.207bn revenue; 84% next-day retention; target 100m DAUs by 2028",
+      "source": "https://pulse2.com/duolingo-daily-active-users-reach-58-7-million-as-retention-hits-record-84-and-social-accounts-top-1-billion-organic-impressions/"
+    },
+    "sources": ["https://www.duolingo.com/", "https://www.canny-creative.com/atlas/brand/duolingo/"]
+  }
+]

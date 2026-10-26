@@ -1,0 +1,128 @@
+{
+  "brand": "Spotify",
+  "url": "https://www.spotify.com/uk/premium/",
+  "style": "Dark-mode-core, bold, playful-premium",
+  "colours": [
+    {
+      "name": "Spotify Green",
+      "hex": "#1ED760",
+      "role": "primary CTA, ticks, selected state",
+      "source": "live CSS --color-spotify-green"
+    },
+    {
+      "name": "Black",
+      "hex": "#000000",
+      "role": "background, theme-color, text on green",
+      "source": "live CSS + html head"
+    },
+    {
+      "name": "Card",
+      "hex": "#1F1F1F",
+      "role": "surface",
+      "source": "live CSS --color-bg-card"
+    },
+    {
+      "name": "Raised",
+      "hex": "#2A2A2A",
+      "role": "raised surface, badges",
+      "source": "live CSS --color-bg-badge"
+    },
+    {
+      "name": "White",
+      "hex": "#FFFFFF",
+      "role": "primary text",
+      "source": "live CSS --color-text-primary"
+    },
+    {
+      "name": "Subdued",
+      "hex": "#B3B3B3",
+      "role": "secondary text",
+      "source": "live CSS --color-text-secondary"
+    },
+    {
+      "name": "Platinum",
+      "hex": "#F6F609",
+      "role": "plan-tier accent",
+      "source": "live CSS --color-plan-platinum"
+    },
+    {
+      "name": "Mint",
+      "hex": "#C5F0C9",
+      "role": "plan-tier accent",
+      "source": "live CSS --color-bg-premium-basic"
+    }
+  ],
+  "typography": {
+    "display": {
+      "family": "Spotify proprietary sans",
+      "weights": [
+        "700"
+      ],
+      "source": "live site"
+    },
+    "partner_fallback": [
+      "platform default sans",
+      "Helvetica Neue",
+      "Helvetica",
+      "Arial"
+    ],
+    "web_stand_in": "Figtree"
+  },
+  "logo": {
+    "type": "Combination mark: circle icon with three sound waves + wordmark",
+    "rules": [
+      "Green logo only on black or white; otherwise mono",
+      "Min 70px digital / 20mm print (icon 21px)",
+      "Clear space = \u00bd icon height",
+      "Wordmark never without the icon"
+    ],
+    "assets": [
+      "https://developer-assets.spotifycdn.com/images/guidelines/design/logo.svg"
+    ]
+  },
+  "ui": {
+    "theme": "Dark; elevation by tone (#000 \u2192 #1F1F1F \u2192 #2A2A2A), no shadows",
+    "buttons": "Pill (border-radius 500px), black text on green",
+    "cards": "16px radius",
+    "container": "max 1408px; section rhythm 128\u2013256px",
+    "hero": "Video hero masked through the logo; huge left-aligned display type",
+    "artwork_radius": "4px small/medium devices, 8px large"
+  },
+  "voice": {
+    "traits": [
+      "punchy",
+      "benefit-first",
+      "casual"
+    ],
+    "messaging": [
+      "Try 1 month for \u00a30",
+      "All the music, without all the ads.",
+      "Just non-stop beats."
+    ],
+    "pattern": "Price-led CTAs; short benefit lines with a casual tag"
+  },
+  "business": {
+    "model": "Freemium: ad-supported Free tier funnels to Premium",
+    "streams": [
+      "Premium subscriptions (Individual \u00a312.99, Student \u00a35.99, Duo \u00a317.99, Family \u00a321.99)",
+      "Advertising",
+      "Audiobooks+ add-on (1.5m subs)",
+      "Live: Reserved ticket access"
+    ],
+    "metrics": {
+      "period": "Q2 2026",
+      "premium_subscribers": "300m (+9%)",
+      "MAUs": "777m (+12%)",
+      "revenue": "\u20ac4.8bn (+14%)",
+      "gross_margin": "33.4%",
+      "operating_income": "\u20ac655m"
+    },
+    "next": "AI personalisation (Talk to Spotify, Personal Podcasts, Running Mode); thin margins because label royalties dominate costs",
+    "source": "https://newsroom.spotify.com/2026-08-04/spotify-q2-2026-earnings/"
+  },
+  "sources": [
+    "https://www.spotify.com/uk/premium/",
+    "https://wwwmarketing.scdn.co/_next/static/css/20b110d55c34bb2f.css",
+    "https://developer.spotify.com/documentation/design"
+  ]
+}

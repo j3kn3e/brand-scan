@@ -1,0 +1,47 @@
+{
+  "revolut": {
+    "color": {
+      "revolut-black": {
+        "$type": "color",
+        "$value": "#000000",
+        "$description": "primary \u00b7 logo, type"
+      },
+      "white": {
+        "$type": "color",
+        "$value": "#FFFFFF",
+        "$description": "primary \u00b7 background, theme-color"
+      },
+      "ui-black": {
+        "$type": "color",
+        "$value": "#191C1F",
+        "$description": "UI dark / tile + mask-icon colour"
+      },
+      "deep-blue": {
+        "$type": "color",
+        "$value": "#1326FD",
+        "$description": "core brand blue"
+      },
+      "mid-blue": {
+        "$type": "color",
+        "$value": "#6FA0FF",
+        "$description": "secondary"
+      },
+      "light-blue": {
+        "$type": "color",
+        "$value": "#C6D9FD",
+        "$description": "secondary"
+      },
+      "purple": {
+        "$type": "color",
+        "$value": "#9539F2",
+        "$description": "accent"
+      },
+      "lime": {
+        "$type": "color",
+        "$value": "#BFFF37",
+        "$description": "accent ('wow' highlights)"
+      }
+    },
+    "font": {}
+  }
+}

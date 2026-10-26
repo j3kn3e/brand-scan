@@ -1,0 +1,755 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Paste a link or type a brand name: get its colours, fonts, logo, UI, voice and business model, read live from the site.">
+<title>Brand Scan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&family=Manrope:wght@500;800&family=Inter:wght@400;500;600&family=Figtree:wght@400;700;900&family=Nunito:wght@500;700;800;900&family=DM+Sans:wght@400;700&family=Space+Grotesk:wght@500;700&family=Playfair+Display:wght@700;900&family=IBM+Plex+Sans:wght@400;600&display=swap">
+<style>
+/* Layout: neutral shell (index, then pipeline) wrapping three full-bleed brand bands, each set in its own palette and type stand-in */
+:root{
+  --bg:#F5F4F1; --fg:#17181A; --muted:#62646B; --line:#DCDAD4; --chip:#EAE8E3; --ink-accent:#2F3BD6;
+  --f-display:"Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  --f-body:"Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#121315;--fg:#ECEBE8;--muted:#9C9EA5;--line:#2C2E33;--chip:#1E2023;--ink-accent:#8F98FF;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#121315;--fg:#ECEBE8;--muted:#9C9EA5;--line:#2C2E33;--chip:#1E2023;--ink-accent:#8F98FF;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:15px/1.55 var(--f-body);margin:0}
+.wrap{max-width:1120px;margin:0 auto;padding-inline:20px}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--ink-accent);outline-offset:2px}
+h1,h2,h3{text-wrap:balance;margin:0}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font:600 11px/1 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;opacity:.7}
+
+/* hero: search-engine style */
+.hero{min-height:88vh;display:grid;grid-template-columns:minmax(0,1fr);align-content:center;justify-items:center;gap:22px;padding-block:40px;transition:min-height .3s ease}
+.hero.compact{min-height:0;padding-block:28px 20px}
+.hero h1{font:800 clamp(40px,7vw,64px)/1 var(--f-display);letter-spacing:-.03em}
+.hero.compact h1{font-size:28px}
+.hero h1{margin-top:-6px}
+.tag-line strong{color:var(--fg);font-weight:600}
+.tag-line{margin:-6px 0 4px;max-width:60ch;text-align:center;color:var(--muted);font-size:16px;line-height:1.5;text-wrap:balance}
+.chips{display:flex;gap:5px}
+.chips i{width:18px;height:26px;border-radius:4px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.06)}
+.chips i:nth-child(odd){transform:translateY(4px)}
+@media (prefers-reduced-motion:no-preference){.chips i{animation:chipIn .5s cubic-bezier(.2,.8,.2,1.2) both;animation-delay:var(--d)}
+@keyframes chipIn{from{opacity:0;transform:translateY(14px) scale(.6)}}}
+.hero.compact .chips,.hero.compact .tag-line{display:none}
+.try{font-size:13px;color:var(--muted);align-self:center;margin-right:2px}
+@media (max-width:480px){.chips i{width:14px;height:22px}.tag-line br{display:none}}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+/* intro */
+.intro{padding-block:48px 28px;display:grid;gap:20px}
+.intro h1{font:800 clamp(34px,6vw,60px)/1 var(--f-display);letter-spacing:-.02em}
+.intro p{max-width:62ch;color:var(--muted);margin:0}
+.jump{display:flex;flex-wrap:wrap;gap:10px}
+.jump a{display:flex;align-items:center;gap:10px;text-decoration:none;padding:10px 14px 10px 10px;border:1px solid var(--line);border-radius:10px;background:var(--chip);font-weight:600}
+.jump i{display:block;width:22px;height:22px;border-radius:6px}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:13px;color:var(--muted)}
+.legend span{display:flex;gap:6px;align-items:center}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+
+/* brand band */
+.band{background:var(--b-bg);color:var(--b-fg);font-family:var(--b-body);padding-block:56px}
+.band .wrap{display:grid;gap:36px}
+.head{display:grid;gap:14px}
+.head h2{font:var(--t-style,normal) var(--t-weight,var(--b-h-weight)) clamp(44px,8vw,92px)/.95 var(--t-font,var(--b-display));letter-spacing:var(--t-track,var(--b-track));text-transform:var(--t-case,var(--b-case));color:var(--t-color,inherit)}
+.head .meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.tag{font:600 12px/1 var(--b-body);padding:7px 11px;border-radius:var(--b-pill);background:var(--b-surface);color:var(--b-fg)}
+.tag.solid{background:var(--b-accent);color:var(--b-on-accent)}
+.head .url{font:13px var(--f-mono);color:var(--b-sub)}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+.card{background:var(--b-surface);border-radius:var(--b-radius);padding:22px;display:grid;gap:14px;align-content:start;min-width:0}
+.card h3{font:var(--b-h3-weight) 13px/1.2 var(--b-body);letter-spacing:.08em;text-transform:uppercase;color:var(--b-sub)}
+.span12{grid-column:span 12}.span7{grid-column:span 7}.span5{grid-column:span 5}.span6{grid-column:span 6}.span4{grid-column:span 4}
+@media (max-width:860px){.span7,.span5,.span6,.span4{grid-column:span 12}}
+
+/* palette */
+.swatches{display:grid;grid-template-columns:1fr;column-gap:40px}
+@media (min-width:860px){.swatches{grid-template-columns:1fr 1fr}}
+.sw{all:unset;cursor:pointer;display:grid;grid-template-columns:40px minmax(0,1fr) auto 8px;grid-template-areas:"chip name hex flag" "chip role hex flag";column-gap:14px;row-gap:2px;align-items:center;padding:10px 6px;border-bottom:1px solid var(--b-line);border-radius:8px}
+.sw:hover{background:var(--b-bg)}
+.sw:focus-visible{outline:2px solid var(--b-accent);outline-offset:0}
+.sw .chip{grid-area:chip;width:40px;height:40px;border-radius:10px;box-shadow:inset 0 0 0 1px var(--b-line)}
+.sw .lbl{display:contents}
+.sw b{grid-area:name;font:600 14px/1.25 var(--b-body);align-self:end}
+.sw small{grid-area:role;font-size:12.5px;line-height:1.3;color:var(--b-sub);align-self:start}
+.sw code{grid-area:hex;font:600 13px var(--f-mono);padding:5px 8px;border-radius:6px;background:var(--b-bg);border:1px solid var(--b-line)}
+.flag{grid-area:flag;width:8px;height:8px;border-radius:50%}
+
+/* type specimen */
+.spec{display:grid;gap:6px}
+.spec .big{font:var(--b-h-weight) clamp(40px,6vw,64px)/1 var(--b-display);letter-spacing:var(--b-track);text-transform:var(--b-case)}
+.spec .row{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid var(--b-line);padding-top:10px;font-size:14px}
+.spec .row span:last-child{color:var(--b-sub);font-family:var(--f-mono);font-size:12px}
+.fcopy{all:unset;box-sizing:border-box;cursor:pointer;border-radius:6px}
+.fcopy:hover{background:var(--b-bg)}
+.fcopy:focus-visible{outline:2px solid var(--b-accent);outline-offset:2px}
+.fcopy .cp{font-style:normal;margin-left:8px;color:var(--b-sub);opacity:.45;font-size:12px}
+.fcopy:hover .cp,.fcopy:focus-visible .cp{opacity:1}
+.note{font-size:12.5px;color:var(--b-sub);margin:0}
+
+ul.clean{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+ul.clean li{display:grid;grid-template-columns:14px 1fr;gap:8px;line-height:1.45}
+ul.clean li::before{content:"";width:6px;height:6px;margin-top:8px;border-radius:2px;background:var(--b-accent)}
+dl.kv{margin:0;display:grid;grid-template-columns:auto 1fr;gap:8px 16px;font-size:14px}
+dl.kv dt{color:var(--b-sub)}dl.kv dd{margin:0}
+
+/* voice */
+.quotes{display:flex;flex-wrap:wrap;gap:10px}
+.q{font:var(--b-h-weight) 19px/1.2 var(--b-display);text-transform:var(--b-case);padding:12px 16px;border-radius:var(--b-radius);background:var(--b-bg);border:1px solid var(--b-line)}
+.traits{display:flex;flex-wrap:wrap;gap:8px}
+
+/* business */
+.metrics{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.m{background:var(--b-bg);border:1px solid var(--b-line);border-radius:calc(var(--b-radius) - 4px);padding:14px;display:grid;gap:4px}
+.m span{font-size:11.5px;color:var(--b-sub);text-transform:uppercase;letter-spacing:.06em}
+.m b{font:var(--b-h-weight) 22px/1.1 var(--b-display);font-variant-numeric:tabular-nums}
+.foot{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px}
+.foot .sources{flex:1 1 300px}
+.cta{justify-self:start;font:700 15px/1 var(--b-body);padding:14px 22px;border-radius:var(--b-btn-radius);background:var(--b-accent);color:var(--b-on-accent);text-decoration:none;box-shadow:var(--b-btn-shadow)}
+.sources{font-size:12px;color:var(--b-sub);display:flex;flex-wrap:wrap;gap:6px 14px}
+.sources a{color:var(--b-sub)}
+.pm{border-left:3px solid var(--b-accent);padding-left:14px;margin:0;line-height:1.5}
+
+/* per-brand themes: each band commits to its brand's look in both site themes */
+#revolut{--b-bg:#FFFFFF;--b-fg:#191C1F;--b-sub:#5C6370;--b-surface:#F2F3F5;--b-line:#E3E5E9;--b-accent:#1326FD;--b-on-accent:#FFFFFF;
+  --b-display:"Manrope","Helvetica Neue",Arial,sans-serif;--b-body:"Inter","Helvetica Neue",Arial,sans-serif;--b-h-weight:800;--b-h3-weight:600;--b-track:-.03em;--b-case:none;--b-radius:20px;--b-pill:999px;--b-btn-radius:999px;--b-btn-shadow:none;color-scheme:light}
+#spotify{--b-bg:#000000;--b-fg:#FFFFFF;--b-sub:#B3B3B3;--b-surface:#1F1F1F;--b-line:#2A2A2A;--b-accent:#1ED760;--b-on-accent:#000000;
+  --b-display:"Figtree","Helvetica Neue",Arial,sans-serif;--b-body:"Figtree","Helvetica Neue",Arial,sans-serif;--b-h-weight:900;--b-h3-weight:700;--b-track:-.035em;--b-case:none;--b-radius:16px;--b-pill:500px;--b-btn-radius:500px;--b-btn-shadow:none;color-scheme:dark}
+#duolingo{--b-bg:#FFFFFF;--b-fg:#4B4B4B;--b-sub:#777777;--b-surface:#F7F7F7;--b-line:#E5E5E5;--b-accent:#58CC02;--b-on-accent:#FFFFFF;
+  --b-display:"Nunito","Arial Rounded MT Bold",Arial,sans-serif;--b-body:"Nunito","Arial Rounded MT Bold",Arial,sans-serif;--b-h-weight:900;--b-h3-weight:800;--b-track:-.01em;--b-case:lowercase;--b-radius:16px;--b-pill:12px;--b-btn-radius:16px;--b-btn-shadow:0 4px 0 #46A302;--t-color:#58CC02;color-scheme:light}
+#duolingo .card{border:2px solid var(--b-line);background:#FFFFFF}
+#revolut .tag.solid{background:#191C1F;color:#FFFFFF}
+#revolut .hl{background:#BFFF37;padding:0 .12em}
+
+/* pipeline */
+.pipe{padding-block:8px 0;display:grid;gap:14px}
+.pipe h2{font:800 clamp(28px,4.4vw,44px)/1.05 var(--f-display);letter-spacing:-.02em}
+.pipe>p{max-width:64ch;color:var(--muted);margin:0}
+.flow-wrap{overflow-x:auto}
+.flow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media (max-width:640px){.flow{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.pipeline{list-style:none;margin:0;padding:0;display:flex;justify-content:center;align-items:stretch;gap:0}
+.pipeline li{display:grid;gap:2px;justify-items:center;text-align:center;padding:12px 18px;border-radius:12px;border:1px solid var(--line);background:var(--bg);min-width:0}
+.pipeline li+li{margin-left:34px;position:relative}
+.pipeline li+li::before{content:"";position:absolute;left:-28px;top:50%;width:22px;border-top:1.5px solid var(--muted)}
+.pipeline li+li::after{content:"";position:absolute;left:-10px;top:calc(50% - 4px);border:4px solid transparent;border-left:5px solid var(--muted);border-right:0}
+.pipeline li.alt{border-style:dashed;background:transparent}
+.pipeline .api{font:600 10.5px var(--f-mono);letter-spacing:.08em;color:var(--ink-accent)}
+.pipeline b{font:700 16px/1.2 var(--f-display)}
+.pipeline small{font-size:12.5px;color:var(--muted);white-space:nowrap}
+@media (max-width:700px){.pipeline{flex-direction:column;align-items:center}
+.pipeline li{width:min(100%,260px)}
+.pipeline li+li{margin-left:0;margin-top:26px}
+.pipeline li+li::before{left:50%;top:-21px;width:0;height:15px;border-top:0;border-left:1.5px solid var(--muted)}
+.pipeline li+li::after{left:calc(50% - 4px);top:-8px;border:4px solid transparent;border-top:5px solid var(--muted);border-bottom:0}
+.pipeline small{white-space:normal}}
+.pipe .why{max-width:none;margin:0;text-align:center;font-size:13.5px;color:var(--muted)}
+.step{border:1px solid var(--line);border-radius:12px;padding:16px;display:grid;gap:8px;align-content:start;background:var(--chip)}
+.step b{font:800 18px/1.1 var(--f-display)}
+.step p{margin:0;font-size:13.5px;color:var(--muted)}
+.step .api{font:600 11px var(--f-mono);letter-spacing:.06em;color:var(--ink-accent)}
+.apis{border-collapse:collapse;width:100%;font-size:14px;min-width:640px}
+.apis th,.apis td{text-align:left;padding:12px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.apis th{font:600 11px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.apis td:first-child{font-weight:600;white-space:nowrap}
+.state{font:600 11px var(--f-mono);padding:4px 8px;border-radius:6px;white-space:nowrap}
+.state.on{background:var(--ink-accent);color:var(--bg)}
+.state.off{border:1px solid var(--line);color:var(--muted)}
+.finding{border:1px solid var(--line);border-radius:12px;padding:18px;display:grid;gap:8px;max-width:760px}
+.finding b{font-family:var(--f-display);font-size:18px}
+.finding p{margin:0;color:var(--muted)}
+/* scan bar */
+.scan{width:100%;max-width:640px;display:grid;grid-template-columns:minmax(0,1fr);gap:14px;justify-items:center}
+.scan form{width:100%;display:flex;align-items:center;gap:8px;padding:6px 6px 6px 18px;border:1px solid var(--line);border-radius:999px;background:var(--bg);box-shadow:0 1px 6px rgba(32,33,36,.08)}
+.scan form:hover,.scan form:focus-within{box-shadow:0 2px 12px rgba(32,33,36,.16);border-color:transparent}
+.ico{width:20px;height:20px;flex:none;fill:none;stroke:var(--muted);stroke-width:2;stroke-linecap:round}
+.scan input{flex:1;min-width:0;font:400 17px var(--f-body);padding:10px 4px;border:0;background:transparent;color:var(--fg)}
+.scan input:focus{outline:none}
+.btn{font:600 15px var(--f-body);padding:11px 20px;border-radius:999px;border:0;background:var(--fg);color:var(--bg);cursor:pointer}
+.btn[disabled]{opacity:.5;cursor:default}
+.reset{all:unset;cursor:pointer;flex:none;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-size:15px;color:var(--muted)}
+.reset:hover{background:var(--chip);color:var(--fg)}
+.reset[hidden]{display:none}
+.reset:focus-visible{outline:2px solid var(--ink-accent)}
+.btn.press{transform:scale(.94)}
+.examples button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+.examples button[aria-pressed="true"] i{box-shadow:0 0 0 1.5px var(--bg)}
+.examples button[aria-pressed="true"]::after{content:"×";margin-left:2px;opacity:.7}
+.examples{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.examples button{all:unset;cursor:pointer;display:flex;align-items:center;gap:7px;padding:7px 13px;border-radius:999px;background:var(--chip);font-size:13.5px;font-weight:500;color:var(--fg)}
+.examples button:hover{background:var(--line)}
+.examples button:focus-visible{outline:2px solid var(--ink-accent)}
+.examples i{width:10px;height:10px;border-radius:50%}
+@media (max-width:420px){.examples .try{display:none}.examples{gap:6px}.examples button{padding:7px 11px}}
+.steps{width:100%;list-style:none;margin:0;padding:0;display:grid;gap:6px;font-size:13.5px}
+.steps[hidden]{display:none}
+.steps li{display:grid;grid-template-columns:76px 1fr;gap:10px;align-items:baseline}
+.steps .api{font:600 11px var(--f-mono);letter-spacing:.06em}
+.steps li[data-s="run"] .api{color:var(--ink-accent)}
+.steps li[data-s="ok"] .api{color:#2BB673}
+.steps li[data-s="err"] .api{color:#D9534F}
+.steps li[data-s="skip"]{opacity:.55}
+.steps-bar{display:flex;align-items:baseline;gap:14px;width:100%;margin-bottom:-6px}
+.scan:not(:has(.steps:not([hidden]))) .steps-bar{display:none}
+.scan.working .steps-bar:not(:has(.timer:not([hidden]))){display:none}
+.steps-toggle{all:unset;display:none;cursor:pointer;margin-left:auto;font-size:12.5px;color:var(--muted)}
+.steps-toggle:hover{color:var(--fg)}
+.steps-toggle:focus-visible{outline:2px solid var(--ink-accent);outline-offset:2px;border-radius:4px}
+.scan:has(.steps:not([hidden])) .steps-toggle{display:inline-block}
+.steps-toggle .off,.scan.steps-off .steps-toggle .on{display:none}
+.scan.steps-off .steps-toggle .off{display:inline}
+.scan.steps-off .steps{display:none}
+.scan.working:has(.steps:not([hidden])) .steps-toggle{display:none}
+.scan.working.steps-off .steps:not([hidden]){display:grid}
+.linkish{all:unset;cursor:pointer;text-decoration:underline;font-weight:600}
+.linkish:focus-visible{outline:2px solid var(--ink-accent)}
+.timer{justify-self:start;margin:0;font:600 12.5px var(--f-mono);font-variant-numeric:tabular-nums;color:var(--muted)}
+.timer.run::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--ink-accent);margin-right:8px;vertical-align:1px}
+@media (prefers-reduced-motion:no-preference){.timer.run::before{animation:pulse 1s ease-in-out infinite alternate}}
+@keyframes pulse{to{opacity:.25}}
+.msg{width:100%;font-size:14px;margin:0;padding:12px 14px;border-radius:12px;background:var(--chip);text-align:center}
+.how{justify-self:stretch;max-width:1080px;width:100%;margin-inline:auto;margin-top:-8px}
+.how[open]{padding-bottom:24px}
+.how summary{cursor:pointer;font-size:13px;color:var(--muted);text-align:center;list-style:none}
+.how summary::-webkit-details-marker{display:none}
+.how[open] summary{margin-bottom:8px}
+.how summary .hide,.how[open] summary .show{display:none}
+.how[open] summary .hide{display:inline}
+.how summary:hover{color:var(--fg)}
+.hide-btn{justify-self:center;font:500 13px var(--f-body);padding:8px 16px;border-radius:999px;border:1px solid var(--line);background:var(--chip);color:var(--fg);cursor:pointer}
+.writing{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:12px;background:var(--b-surface);border:1px solid var(--b-line);font-size:14.5px;justify-self:start}
+.writing-t{font:600 12.5px var(--f-mono);color:var(--b-sub);margin-left:4px}
+.spin{width:16px;height:16px;border-radius:50%;border:2px solid var(--b-line);border-top-color:var(--b-accent);flex:none}
+.writing.slim{margin:0 0 14px}
+.skels{display:grid;gap:10px}
+.head h2.fw{opacity:0}
+.head h2.tskel{display:block;width:min(420px,60%);height:clamp(40px,7vw,80px);border-radius:12px;background:linear-gradient(90deg,var(--b-line) 0%,var(--b-bg) 50%,var(--b-line) 100%);background-size:200% 100%}
+.skels i{display:block;height:12px;border-radius:6px;background:linear-gradient(90deg,var(--b-line) 0%,var(--b-bg) 50%,var(--b-line) 100%);background-size:200% 100%}
+@media (prefers-reduced-motion:no-preference){.spin{animation:spin .8s linear infinite}.skels i,.head h2.tskel{animation:shimmer 1.4s ease-in-out infinite}.head h2{transition:opacity .35s ease}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes shimmer{from{background-position:100% 0}to{background-position:-100% 0}}
+.copy-btn{font:600 12.5px var(--b-body);padding:7px 12px;border-radius:8px;border:1px solid var(--b-line);background:transparent;color:var(--b-sub);cursor:pointer}
+.copy-btn:hover{color:var(--b-fg);border-color:var(--b-sub)}
+.live-actions{display:flex;flex-wrap:wrap;gap:10px}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);font:600 13px var(--f-mono);padding:10px 14px;border-radius:8px}
+@media (prefers-reduced-motion:no-preference){.sw{transition:background .15s ease}}
+</style>
+</head>
+<body>
+
+<header class="wrap hero" id="hero">
+  <div class="chips" aria-hidden="true"><i style="background:#1326FD;--d:0ms"></i><i style="background:#6FA0FF;--d:45ms"></i><i style="background:#BFFF37;--d:90ms"></i><i style="background:#9539F2;--d:135ms"></i><i style="background:#191C1F;--d:180ms"></i><i style="background:#1ED760;--d:225ms"></i><i style="background:#F6F609;--d:270ms"></i><i style="background:#C5F0C9;--d:315ms"></i><i style="background:#2A2A2A;--d:360ms"></i><i style="background:#58CC02;--d:405ms"></i><i style="background:#89E219;--d:450ms"></i><i style="background:#1CB0F6;--d:495ms"></i><i style="background:#FFC800;--d:540ms"></i><i style="background:#FF4B4B;--d:585ms"></i></div>
+  <h1>Brand Scan</h1>
+  <p class="tag-line">Paste a link or type in a brand name.</p>
+  <div class="scan" id="scan">
+    <form id="scanForm" autocomplete="off" role="search">
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+      <label for="target" class="sr">Website or company</label>
+      <input id="target" name="target" placeholder="Link or brand name" required>
+      <button class="reset" id="resetBtn" type="button" aria-label="Clear and start again" title="Clear" hidden>✕</button>
+      <button class="btn" id="go" type="submit">Scan</button>
+    </form>
+    <div class="examples"><span class="try">Try one</span><button type="button" data-ex="0"><i style="background:#191C1F"></i>Revolut</button><button type="button" data-ex="1"><i style="background:#1ED760"></i>Spotify</button><button type="button" data-ex="2"><i style="background:#58CC02"></i>Duolingo</button></div>
+    <div class="steps-bar"><p class="timer" id="timer" hidden aria-live="off"></p>
+    <button type="button" class="steps-toggle" id="stepsToggle" aria-controls="steps" aria-expanded="true"><span class="on">Hide steps ▴</span><span class="off">Show steps ▾</span></button></div>
+    <ol class="steps" id="steps" hidden></ol>
+    <p class="msg" id="scanMsg" hidden></p>
+  </div>
+  <details class="how" id="pipeline"><summary><span class="show">How it works ▾</span><span class="hide">Hide how it works ▴</span></summary>
+<section class="pipe">
+  <ol class="pipeline">
+    <li><span class="api">SEARCH</span><b>Find</b><small>site, guidelines, results</small></li>
+    <li><span class="api">FETCH</span><b>Read</b><small>live CSS, fonts, copy</small></li>
+    <li class="alt"><span class="api">AGENT</span><b>Fallback</b><small>only if a page won't load</small></li>
+    <li><span class="api">CLAUDE</span><b>Write</b><small>the brand guide</small></li>
+  </ol>
+  <p class="why">Hex codes come from the live code, not a screenshot, so they match what the site actually ships.</p>
+</section></details>
+</header>
+
+<main id="live"></main>
+
+
+
+<div class="toast" id="toast" hidden></div>
+
+<script>
+const BRANDS = [
+ {id:"revolut",name:"Revolut",url:"https://www.revolut.com/",style:"Fintech-minimal",tags:["Monochrome-core","Premium","Photo-led"],
+  colours:[
+   ["Revolut Black","#000000","Logo, type","g"],["White","#FFFFFF","Background · theme-color","g"],["UI Black","#191C1F","UI dark · tile + mask-icon","s"],
+   ["Deep Blue","#1326FD","Core brand blue","g"],["Mid Blue","#6FA0FF","Secondary","g"],["Light Blue","#C6D9FD","Secondary","g"],
+   ["Purple","#9539F2","Accent","g"],["Lime","#BFFF37","Accent for 'wow' highlights","g"]],
+  type:{sample:"Banking & Beyond",rows:[["Display","Aeonik Pro · Black, Black-Capitalised, Medium"],["UI / body","Inter · Regular, Medium, SemiBold"]],
+    note:"Both families found in the live page's font preloads. Shown here in Manrope + Inter."},
+  logo:{kind:"Wordmark (primary) and an 'R' monogram for the app icon",rules:["Never lock up the wordmark with the icon","Revolut Black or White only, never other colours","Minimum size 80px or 25mm","Clear space equals the width of the 'R'"]},
+  ui:[["Theme","Light; theme-color #FFFFFF"],["Hero","Full-bleed photography (3840px images preloaded)"],["Rhythm","One headline and one CTA per section"],["Trust","Ratings and awards strip after the hero"]],
+  voice:{traits:["Confident","Aspirational","Compact"],lines:["This is your bank, redefined.","Your salary, reimagined","Life, meets savings","Ask, and AIR makes it happen"],
+    pattern:"Headlines of two to four words that twist a familiar phrase. Sentences average about 5 words. Copy speaks to 'you' often (about 9.5 times per 100 words)."},
+  biz:{model:"Freemium finance super-app",period:"FY2025",metrics:[["Revenue","$6.0bn","+46%"],["Pretax profit","$2.3bn","+57%"],["Retail customers","68.3m","+30%"],["Customer balances","$67.5bn","+66%"]],
+    streams:["Paid plans (Plus up to Ultra)","Card interchange","FX","Interest on balances","Trading and crypto fees","Business banking, 16% of income"],
+    next:"Full UK banking licence in March 2026 opens up lending. It has filed for a US bank charter and targets 100m customers by mid-2027.",
+    pm:"The free tier is the acquisition engine. Money comes from the many small fees people pay once they use Revolut daily, so the product's job is to become the default app for spending.",
+    src:[["CNBC, Mar 2026","https://www.cnbc.com/2026/03/24/revolut-2025-earnings-record-profit.html"]]},
+  cta:"Download the app",
+  sources:[["revolut.com","https://www.revolut.com/"],["Open Banking brand guidelines (PDF)","https://developer.revolut.com/assets/oba/Revolut-Open-Banking-guidelines.pdf"],["Logo assets","https://developer.revolut.com/docs/resources/open-banking-logo-guidelines"]]},
+
+ {id:"spotify",name:"Spotify",url:"https://www.spotify.com/uk/premium/",style:"Dark-mode-core",tags:["Bold","Playful-premium","Tonal elevation"],
+  colours:[
+   ["Spotify Green","#1ED760","CTA, ticks, selected state","s"],["Black","#000000","Background · text on green","s"],["Card","#1F1F1F","Surface","s"],
+   ["Raised","#2A2A2A","Raised surface, badges","s"],["White","#FFFFFF","Primary text","s"],["Subdued","#B3B3B3","Secondary text","s"],
+   ["Platinum","#F6F609","Plan-tier accent","s"],["Mint","#C5F0C9","Plan-tier accent","s"]],
+  type:{sample:"All the music, without all the ads.",rows:[["Display + UI","Spotify's own sans · 700 for headlines and CTAs"],["Partner fallback","Platform default sans → Helvetica Neue → Helvetica → Arial"]],
+    note:"Hero type scales up to 8–9rem on wide screens. Shown here in Figtree."},
+  logo:{kind:"Combination mark: a circle icon with three sound waves, plus the wordmark",rules:["Green logo only on black or white; otherwise use mono","Minimum 70px digital or 20mm print (icon alone: 21px)","Clear space equals half the icon's height","The wordmark never appears without the icon"]},
+  ui:[["Buttons","Pill shape (500px radius), black text on green"],["Cards","16px radius, no shadows"],["Elevation","By tone: #000 → #1F1F1F → #2A2A2A"],["Grid","Max width 1408px; 128–256px between sections"],["Hero","Video masked through the logo; left-aligned display type"]],
+  voice:{traits:["Punchy","Benefit-first","Casual"],lines:["Try 1 month for £0","All the music, without all the ads.","Just non-stop beats."],
+    pattern:"CTAs lead with the price. Each benefit is one short line with a casual tag."},
+  biz:{model:"Freemium: ad-supported Free tier → Premium",period:"Q2 2026",metrics:[["Premium subscribers","300m","+9%"],["Monthly active users","777m","+12%"],["Revenue","€4.8bn","+14%"],["Gross margin","33.4%","record"]],
+    streams:["Premium plans: Individual £12.99, Student £5.99, Duo £17.99, Family £21.99","Advertising on the Free tier","Audiobooks+ add-on (1.5m subscribers)","Reserved concert-ticket access"],
+    next:"AI personalisation drives the roadmap: Talk to Spotify, Personal Podcasts, Running Mode. Operating income reached €655m.",
+    pm:"Most revenue goes back to rights holders as royalties, so margins are thin. Growth therefore comes from moving free users to paid and adding higher-margin extras such as audiobooks and live events.",
+    src:[["Spotify newsroom, Aug 2026","https://newsroom.spotify.com/2026-08-04/spotify-q2-2026-earnings/"]]},
+  cta:"Try 1 month for £0",
+  sources:[["spotify.com/uk/premium","https://www.spotify.com/uk/premium/"],["Live stylesheet","https://wwwmarketing.scdn.co/_next/static/css/20b110d55c34bb2f.css"],["Design & branding guidelines","https://developer.spotify.com/documentation/design"]]},
+
+ {id:"duolingo",name:"Duolingo",url:"https://www.duolingo.com/",style:"Playful-core",tags:["Character-led","Gamified","Chunky-rounded"],
+  colours:[
+   ["Feather Green","#58CC02","Primary brand","g"],["Mask Green","#89E219","Accent · behind Duo","g"],["Eel","#4B4B4B","Typography","g"],["Snow","#FFFFFF","Primary background","g"],
+   ["Macaw","#1CB0F6","Secondary","u"],["Cardinal","#FF4B4B","Secondary","u"],["Bee","#FFC800","Secondary","u"],["Fox","#FF9600","Secondary","u"]],
+  type:{sample:"free. fun. effective.",rows:[["Display","Feather Bold · bespoke, lowercase only"],["Body","DIN Next Rounded · sentence case"]],
+    note:"The two faces are never mixed in one sentence. Shown here in Nunito."},
+  logo:{kind:"Wordmark set in Feather Bold, plus Duo the owl",rules:["The 'g' has a flick that echoes Duo's eyebrows","Duo is drawn to carry a wide range of emotions","House rule: when in doubt, lean in to green"]},
+  ui:[["Theme","Light (Snow); flat colour"],["Shapes","Chunky, rounded, high-saturation"],["Patterns","Streaks and progress shown up front; the same nav every session"],["Scan note","Homepage is JS-only, so Fetch returned it empty and the Agent fallback was used"]],
+  voice:{traits:["Expressive","Playful","Embracing","Worldly"],lines:["The most fun way to learn languages, chess, and more!","free. fun. effective.","stay motivated"],
+    pattern:"Celebrates small wins. The jokes are always at Duo's expense, never the learner's. Avoids slang that won't translate."},
+  biz:{model:"Freemium: free app with ads → Super / Max",period:"Q2 2026",metrics:[["Daily active users","58.7m","+23%"],["Paid subscribers","12.7m","+17%"],["Revenue","$298.5m","+18%"],["Gross margin","72.6%","AI cost cuts"]],
+    streams:["Subscriptions (Super, Max)","Advertising","Duolingo English Test","In-app purchases"],
+    next:"FY26 guidance is about $1.207bn revenue. Next-day retention hit a record 84%, and the target is 100m daily users by 2028.",
+    pm:"Retention is the product. Streaks, Duo's nudges and daily goals keep daily users high, and a bigger daily base turns more people into subscribers.",
+    src:[["Pulse 2.0, Aug 2026","https://pulse2.com/duolingo-daily-active-users-reach-58-7-million-as-retention-hits-record-84-and-social-accounts-top-1-billion-organic-impressions/"]]},
+  cta:"get started",
+  sources:[["duolingo.com","https://www.duolingo.com/"],["Brand atlas (cites design.duolingo.com)","https://www.canny-creative.com/atlas/brand/duolingo/"]]}
+];
+const SRC={s:["#2BB673","Live site code"],g:["#2F6FE0","Official guidelines"],u:["#E0A21B","Not re-verified"]};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]));
+const safeUrl=u=>/^https?:\/\//i.test(u||"")?esc(u):"#";
+const hostOf=u=>{try{return new URL(u).hostname.replace(/^www\./,"")}catch(_){return "site"}};
+const skel=ws=>`<div class="skels" aria-hidden="true">${ws.map(w=>`<i style="width:${w}%"></i>`).join("")}</div>`;
+const li=a=>`<ul class="clean">${a.map(x=>`<li><span>${esc(x)}</span></li>`).join("")}</ul>`;
+function bandHTML(b){return `
+<section class="band" id="${b.id}" aria-label="${esc(b.name)} brand guide"${b.themeCss?` style="${esc(b.themeCss)}"`:""}>
+ <div class="wrap">
+  <div class="head">
+   ${b.prelim?`<h2 class="tskel" role="img" aria-label="${esc(b.name)}"></h2>`:`<h2${b.live&&!b.quiet?' class="fw"':""}>${b.id==="revolut"?`<span class="hl">${esc(b.name)}</span>`:esc(b.name)}</h2>`}
+   ${b.prelim?`<div class="writing" role="status"><span class="spin" aria-hidden="true"></span><span><b>Colours are in.</b> Claude is writing the rest of the guide… <span class="writing-t" id="writingT"></span></span></div>`:`<div class="meta"><span class="tag solid">${esc(b.style)}</span>${b.tags.map(t=>`<span class="tag">${esc(t)}</span>`).join("")}</div>`}
+   ${b.live?`<div class="live-actions"><button type="button" class="copy-btn" id="copyJson">⧉ Copy JSON</button><button type="button" class="copy-btn" id="copyTokens">⧉ Copy tokens</button></div>`:""}
+  </div>
+  <div class="grid">
+   <div class="card span12"><h3>Colour palette</h3>
+    ${b.pending?`<div class="writing slim" role="status" id="officialNote"><span class="spin" aria-hidden="true"></span><span><b>Official palette on its way.</b> Reading the brand site in a real browser… <span class="writing-t" id="officialT"></span></span></div>`:""}
+    ${b.colours.length?"":`<p class="note" style="margin:0;font-size:14px">No colours could be read. This site blocks automated readers.</p>`}<div class="swatches">${b.colours.map(([n,h,r,s])=>`<button class="sw" type="button" data-hex="${h}" aria-label="Copy ${n} ${h}">
+      <div class="chip" style="background:${h}"></div>
+      <div class="lbl"><b>${esc(n)}</b><code>${h}</code><small>${esc(r)}</small></div><i class="flag" style="background:${SRC[s][0]}" title="${SRC[s][1]}"></i></button>`).join("")}</div>
+   </div>
+   <div class="card span7"><h3>Typography</h3>
+    <div class="spec"><div class="big">${esc(b.type.sample)}</div>${b.type.rows.map(([k,v])=>{const f=String(v).split(/\s+[·|–-]\s+|\s*\(/)[0].trim();return `<button type="button" class="row fcopy" data-copy="${esc(f)}" aria-label="Copy font name ${esc(f)}" title="Copy font name"><span>${String(v).startsWith(f)?`<span class="fn">${esc(f)}</span>${esc(String(v).slice(f.length))}`:esc(v)}<i class="cp" aria-hidden="true">⧉</i></span><span>${esc(k)}</span></button>`}).join("")}</div>
+</div>
+   <div class="card span5"><h3>Logo</h3>${b.prelim?skel([70,90,55]):`<p style="margin:0;font-weight:600">${esc(b.logo.kind)}</p>${li(b.logo.rules.slice(0,2))}`}</div>
+   <div class="card span6"><h3>Layout &amp; UI patterns</h3><dl class="kv">${b.ui.slice(0,3).map(([k,v])=>`<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("")}</dl></div>
+   <div class="card span6"><h3>Tone of voice &amp; messaging</h3>${b.prelim?skel([45,85,65]):""}
+    <div class="traits">${b.voice.traits.map(t=>`<span class="tag">${esc(t)}</span>`).join("")}</div>
+    <div class="quotes">${b.voice.lines.map(l=>`<span class="q">${esc(l)}</span>`).join("")}</div></div>
+   <div class="card span12"><h3>Business model${b.prelim?"":" · "+esc(b.biz.model)}</h3>${b.prelim?skel([30,95,80,60]):""}
+    <div class="metrics">${b.biz.metrics.map(([k,v,d])=>`<div class="m"><span>${esc(k)}</span><b>${esc(v)}</b><small style="color:var(--b-sub)">${esc(d)} · ${esc(b.biz.period)}</small></div>`).join("")}</div>
+    <div class="grid" style="gap:16px">
+     ${b.prelim?"":`<div class="span6" style="min-width:0;display:grid;gap:10px;align-content:start"><span class="eyebrow">Revenue streams</span>${li(b.biz.streams)}</div>`}
+     ${b.prelim?"":`<div class="span6" style="min-width:0;display:grid;gap:12px;align-content:start"><span class="eyebrow">PM read</span><p class="pm">${esc(b.biz.pm)}</p></div>`}
+    </div>
+   </div>
+  </div>
+  <div class="foot"><a class="cta" href="${safeUrl(b.url)}" target="_blank" rel="noopener">Visit ${esc(hostOf(b.url))} ↗</a>
+  <div class="sources">Sources: ${[...b.sources,...b.biz.src].map(([t,u])=>`<a href="${safeUrl(u)}" target="_blank" rel="noopener">${esc(t)}</a>`).join("")}</div></div>
+ </div>
+</section>`}
+
+
+const toast=document.getElementById("toast");let tt;
+function show(m){toast.textContent=m;toast.hidden=false;clearTimeout(tt);tt=setTimeout(()=>toast.hidden=true,1400)}
+document.addEventListener("click",e=>{
+  const b=e.target.closest(".sw,.fcopy");if(!b)return;const h=b.dataset.hex||b.dataset.copy;if(!h)return;
+  const fallback=()=>{const r=document.createRange();r.selectNodeContents(b.querySelector("code")||b.querySelector(".fn")||b.querySelector("span"));const s=getSelection();s.removeAllRanges();s.addRange(r);show("Selected "+h+", press Ctrl/Cmd+C")};
+  try{navigator.clipboard.writeText(h).then(()=>show("Copied "+h)).catch(fallback)}catch(_){fallback()}
+});
+</script>
+<script>
+/* Live scan: TinyFish does the reading and Claude writes the analysis, both through this site's own API (/api/*), which holds the keys. */
+const FONTS=["Manrope","Inter","Figtree","Nunito","DM Sans","Space Grotesk","Playfair Display","IBM Plex Sans"];
+const loadedFonts=new Set(FONTS),fontReady=new Map();
+function okFont(n){return typeof n==="string"&&/^[A-Za-z0-9 ]{2,40}$/.test(n.trim())}
+function loadFont(n){ // any Google Font family, fetched on demand (v1 API tolerates missing weights)
+  if(!okFont(n))return false;n=n.trim();if(loadedFonts.has(n))return true;loadedFonts.add(n);
+  const l=document.createElement("link");l.rel="stylesheet";
+  l.href="https://fonts.googleapis.com/css?family="+encodeURIComponent(n)+":300,400,500,600,700,800,900&display=swap";
+  fontReady.set(n,new Promise(res=>{l.onload=l.onerror=res}));
+  document.head.appendChild(l);return true}
+function titleFont(t,ti){t=t||{};ti=ti||{};return{f:okFont(ti.font)?ti.font.trim():(okFont(t.display)?t.display.trim():"Inter"),w:Math.round(Math.max(300,Math.min(900,+ti.weight||800))/100)*100,i:ti.italic===true}}
+function revealTitle({f,w,i}){ // keep the brand name hidden until its font has loaded (max 4s)
+  const h=liveEl.querySelector(".head h2.fw");if(!h)return;const done=()=>h.classList.remove("fw");
+  if(!document.fonts){done();return}
+  Promise.race([(fontReady.get(f)||Promise.resolve()).then(()=>document.fonts.load(`${i?"italic ":""}${w} 1em "${f}"`)),new Promise(r=>setTimeout(r,4000))]).then(done,done)}
+const $=id=>document.getElementById(id);
+const form=$("scanForm"),input=$("target"),go=$("go"),stepsEl=$("steps"),msg=$("scanMsg"),liveEl=$("live");
+let lastGuide=null,busy=false;
+async function api(path,body){
+  let r;try{r=await fetch(path,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)})}catch(_){throw{code:"server_unavailable",retryable:true}}
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok)throw j.error||{code:r.status>=500?"server_unavailable":"tool_error",message:"HTTP "+r.status,retryable:r.status>=500};
+  return j}
+
+const hero=$("hero");
+const scanBox=$("scan"),stepsToggle=$("stepsToggle");
+const timerEl=$("timer");let timerId=null,timerT0=0;
+const mmss=ms=>{const t=Math.floor(ms/1000);return Math.floor(t/60)+":"+String(t%60).padStart(2,"0")};
+function timerStart(){clearInterval(timerId);timerT0=Date.now();timerEl.className="timer run";timerEl.hidden=false;const tick=()=>{const t=mmss(Date.now()-timerT0);timerEl.textContent="Scanning · "+t;const w=document.getElementById("writingT");if(w)w.textContent=t};tick();timerId=setInterval(tick,1000)}
+function timerStop(ok){clearInterval(timerId);timerId=null;timerEl.className="timer";if(ok)timerEl.textContent="Scanned in "+mmss(Date.now()-timerT0);else timerEl.hidden=true}
+function setSteps(off){scanBox.classList.toggle("steps-off",off);stepsToggle.setAttribute("aria-expanded",String(!off));try{localStorage.setItem("bs-steps-off",off?"1":"0")}catch(_){}}
+try{if(localStorage.getItem("bs-steps-off")==="1")setSteps(true)}catch(_){}
+stepsToggle.addEventListener("click",()=>setSteps(!scanBox.classList.contains("steps-off")));
+function showBand(html,quiet){liveEl.innerHTML=html;hero.classList.add("compact");if(typeof updReset==="function")updReset();if(!quiet)liveEl.firstElementChild?.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"})}
+/* Example chips: replay a saved scan so people see how it works (no TinyFish credit used) */
+const DEMO={
+  revolut:{url:"https://www.revolut.com/",steps:[["FETCH","Reading revolut.com: head tags, fonts, stylesheets"],["FETCH","Reading homepage copy for tone of voice"],["SEARCH","Finding official brand guidelines"],["SEARCH","Looking up business model and results"],["FETCH","Reading 9 stylesheets + brand guidelines PDF"],["CLAUDE","Writing the brand guide"]]},
+  spotify:{url:"https://www.spotify.com/uk/premium/",steps:[["FETCH","Reading spotify.com: head tags, fonts, stylesheets"],["FETCH","Reading homepage copy for tone of voice"],["SEARCH","Finding official brand guidelines"],["SEARCH","Looking up business model and results"],["FETCH","Reading 3 stylesheets + design guidelines"],["CLAUDE","Writing the brand guide"]]},
+  duolingo:{url:"https://www.duolingo.com/",steps:[["FETCH","Reading duolingo.com: head tags, fonts, stylesheets"],["FETCH","Page is script-rendered, no copy returned","skip"],["AGENT","Opening the page in a real browser instead"],["SEARCH","Finding official brand guidelines"],["SEARCH","Looking up business model and results"],["CLAUDE","Writing the brand guide"]]}};
+let demoRun=0;
+const reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const wait=ms=>new Promise(r=>setTimeout(r,reduced?Math.min(ms,60):ms));
+async function playDemo(i){
+  if(busy)return;
+  timerStop(false);
+  const run=++demoRun,b=BRANDS[i],d=DEMO[b.id],live=()=>run===demoRun;
+  document.querySelectorAll(".examples button").forEach(x=>x.setAttribute("aria-pressed",x.dataset.ex==i));
+  say("");stepsEl.innerHTML="";stepsEl.hidden=false;liveEl.innerHTML="";hero.classList.add("compact");scanBox.classList.add("working");
+  input.value="";input.focus();
+  for(const ch of d.url){if(!live())return;input.value+=ch;await wait(9)}
+  await wait(120);if(!live())return;
+  go.classList.add("press");await wait(180);go.classList.remove("press");
+  for(const [api,label,end] of d.steps){if(!live())return;const done=step(api+label,api,label);await wait(api==="CLAUDE"?900:520);done(end||"ok")}
+  if(!live())return;
+  scanBox.classList.remove("working");
+  showBand(bandHTML(b));
+  say("That was a replay of a saved scan. Paste any website to run a live one.");
+}
+const resetBtn=$("resetBtn");
+function updReset(){resetBtn.hidden=busy||(!input.value&&!hero.classList.contains("compact"))}
+resetBtn.addEventListener("click",()=>{if(busy)return;closeResult();input.value="";updReset();input.focus()});
+function closeResult(){
+  timerStop(false);
+  demoRun++;liveEl.innerHTML="";stepsEl.innerHTML="";stepsEl.hidden=true;say("");input.value="";
+  scanBox.classList.remove("working");hero.classList.remove("compact");
+  document.querySelectorAll(".examples button").forEach(x=>x.setAttribute("aria-pressed","false"));
+}
+document.querySelectorAll(".examples button").forEach(b=>b.addEventListener("click",()=>{
+  if(busy)return;
+  if(b.getAttribute("aria-pressed")==="true"){closeResult();return}
+  playDemo(+b.dataset.ex)}));
+$("hideHow")?.addEventListener("click",()=>{const d=$("pipeline");d.open=false;d.querySelector("summary").scrollIntoView({block:"center",behavior:reduced?"auto":"smooth"})});
+input.addEventListener("input",()=>{
+  demoRun++;updReset();if(busy)return;
+  scanBox.classList.remove("working");
+  // typing after an example closes that example
+  if(document.querySelector('.examples button[aria-pressed="true"]')){const v=input.value;closeResult();input.value=v}
+});
+
+function say(t){msg.textContent=t;msg.hidden=!t}
+function step(key,api,label){let li=stepsEl.querySelector(`[data-k="${key}"]`);
+  if(!li){li=document.createElement("li");li.dataset.k=key;li.innerHTML=`<span class="api"></span><span class="lbl"></span>`;stepsEl.append(li)}
+  li.querySelector(".api").textContent=api;li.querySelector(".lbl").textContent=label;li.dataset.s="run";return s=>{li.dataset.s=s}}
+function mcpCopy(e){
+  switch(e&&e.code){
+    case "not_configured":return "Live scans aren't set up on this copy of the site yet ("+(e.message||"missing API key")+"). Try an example meanwhile.";
+    case "rate_limited":return e.message||"Too many scans right now. Wait a few minutes, then try again.";
+    case "tool_error":return "TinyFish couldn't read that page: "+(e.message||"unknown error");
+    case "server_unavailable":return "TinyFish didn't answer in time. Try again in a moment.";
+    default:return "The scan stopped: "+((e&&e.message)||"unknown error");
+  }}
+const tf=(tool,args)=>api("/api/tinyfish",{tool,args});
+async function tfRetry(tool,args){try{return await tf(tool,args)}catch(e){if(e&&e.retryable){await new Promise(r=>setTimeout(r,(e.retryAfterMs||1500)+Math.random()*800));return tf(tool,args)}throw e}}
+
+/* ---- Agent fallback: async run + polling (a sync run can outlast the call budget) ---- */
+const uuid=()=>(crypto.randomUUID?crypto.randomUUID():"10000000-1000-4000-8000-100000000000".replace(/[018]/g,c=>(c^crypto.getRandomValues(new Uint8Array(1))[0]&15>>c/4).toString(16)));
+async function runAgent(url,stealth,onTick,kind){
+  const start=await tf("agent_start",{url,stealth:!!stealth,kind:kind||"render"});
+  const id=start&&(start.run_id||start.id);if(!id)throw{code:"tool_error",message:"no run id"};
+  const t0=Date.now();
+  while(Date.now()-t0<3*60*1000){
+    await new Promise(r=>setTimeout(r,Date.now()-t0<15000?15000:10000));
+    onTick&&onTick(Math.round((Date.now()-t0)/1000)+"s");
+    let r;try{r=await tf("get_run",{id})}catch(e){if(e&&e.retryable)continue;throw e}
+    const st=r&&r.status;
+    if(st==="COMPLETED")return r.result||null;
+    if(st==="FAILED"||st==="CANCELLED")return null;
+  }
+  return null;
+}
+
+/* ---- deterministic extraction (same logic as brand_guide.py) ---- */
+const normHex=h=>{h=h.replace("#","").toUpperCase();return "#"+(h.length===3?h.split("").map(c=>c+c).join(""):h)};
+const THIRD_PARTY_CSS=/(accounts\.google\.com|fonts\.googleapis\.com|gstatic\.com|recaptcha|cookielaw\.org|onetrust|cookiebot|consensu|trustarc|usercentrics|klarna|clearpay|afterpay|paypal|stripe\.network|js\.stripe\.com|intercom|zendesk|hotjar|cdnjs\.cloudflare\.com|cdn\.jsdelivr\.net|unpkg\.com|bootstrapcdn|fontawesome|typekit\.net|use\.typekit|trustpilot|yotpo|reviews\.io)/i;
+function parseHead(html,base){
+  const d=new DOMParser().parseFromString(`<html>${html}</html>`,"text/html");
+  const abs=u=>{try{return new URL(u,base).href}catch(_){return null}};
+  const attr=(sel,a)=>d.querySelector(sel)?.getAttribute(a)||null;
+  return{
+    css:[...new Set([...d.querySelectorAll('link[rel~="stylesheet"],link[as="style"],link[href*=".css"]')].map(l=>abs(l.getAttribute("href"))).filter(u=>u&&!/^data:/.test(u)&&!THIRD_PARTY_CSS.test(u)))],
+    fonts:[...d.querySelectorAll('link[as="font"],link[href$=".woff2"],link[href$=".woff"]')].map(l=>l.getAttribute("href")).filter(Boolean),
+    themeColor:attr('meta[name="theme-color"]',"content"),
+    tileColor:attr('meta[name="msapplication-TileColor"]',"content")||attr('meta[name="msapplication-tilecolor"]',"content"),
+    maskColor:attr('link[rel="mask-icon"]',"color"),
+    inlineCss:[...d.querySelectorAll("style")].map(s=>s.textContent).join("\n")}}
+function fontFamilies(files){const f={};for(const u of files){const stem=(u.split("/").pop()||"").replace(/\.(woff2?|ttf|otf)$/,"");const [fam,...w]=stem.split("-");(f[fam]=f[fam]||[]).push(w.join("-")||"Regular")}return f}
+function parseCss(css){
+  css=css.replace(/\\/g,"");const freq={};
+  for(const m of css.matchAll(/#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{3})\b/g)){const h=normHex(m[0]);freq[h]=(freq[h]||0)+1}
+  for(const m of css.matchAll(/rgba?\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3})(?:,\s*([\d.]+))?\)/g)){if(m[4]&&+m[4]<.5)continue;const h="#"+[m[1],m[2],m[3]].map(n=>(+n).toString(16).padStart(2,"0")).join("").toUpperCase();freq[h]=(freq[h]||0)+1}
+  const named={};for(const m of css.matchAll(/--([\w-]+)\s*:\s*(#[0-9a-fA-F]{3,6})\b/g))named[m[1]]=normHex(m[2]);
+  for(const m of css.matchAll(/--([\w-]+)\s*:\s*rgba?\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3})(?:,\s*([\d.]+))?\)/g)){if(m[5]&&+m[5]<.5)continue;if(!named[m[1]])named[m[1]]="#"+[m[2],m[3],m[4]].map(n=>(+n).toString(16).padStart(2,"0")).join("").toUpperCase()}
+  const faces=new Set();for(const m of css.matchAll(/@font-face\s*{[^}]*?font-family:\s*['"]?([^;'"}]+)/gi))faces.add(m[1].trim());
+  const fams={};for(const m of css.matchAll(/font-family:\s*([^;}]+)/gi)){const f=m[1].split(",")[0].replace(/['"]/g,"").trim();if(f&&!f.startsWith("var("))fams[f]=(fams[f]||0)+1}
+  const radii={};for(const m of css.matchAll(/border-radius:\s*([\d.]+(?:px|rem|%))/g))radii[m[1]]=(radii[m[1]]||0)+1;
+  const top=(o,n)=>Object.entries(o).sort((a,b)=>b[1]-a[1]).slice(0,n);
+  const heads=[];for(const m of css.matchAll(/([^{}@;]{1,160})\{([^{}]{0,600})\}/g)){const sel=m[1].trim(),d=m[2];
+    if(/(^|[\s,>.#_-])(h1|h2|hero|headline|heading|title|display|logo|wordmark|brand)/i.test(sel)&&/font-(family|weight|size)|letter-spacing|text-transform/.test(d)){
+      heads.push(sel.slice(0,80)+"{"+d.split(";").filter(x=>/font|letter-spacing|text-transform|color/.test(x)).join(";").slice(0,220)+"}");if(heads.length>=18)break}}
+  return{headlines:heads,freq:top(freq,24),named:Object.entries(named).slice(0,120),faces:[...faces].slice(0,20),families:top(fams,8),radii:top(radii,6)}}
+
+/* ---- the pipeline ---- */
+form.addEventListener("submit",async e=>{
+  e.preventDefault();if(busy)return;demoRun++;
+  const target=input.value.trim();if(!target)return;
+  if(target.length<2||!/[a-z0-9]/i.test(target)||target.length>200){msg.innerHTML="";say("Type a brand name or paste a link, e.g. monzo.com");return}
+  const cached=!forceFresh&&loadScan(target);forceFresh=false;
+  if(cached){
+    timerStop(false);
+    demoRun++;stepsEl.innerHTML="";stepsEl.hidden=true;document.querySelectorAll(".examples button").forEach(x=>x.setAttribute("aria-pressed","false"));
+    renderLive(cached.v.g,cached.v.home,cached.v.cssUrls||[],cached.v.gUrls||[]);
+    const mins=Math.round((Date.now()-cached.t)/60000);
+    msg.innerHTML="";msg.append(`Showing your scan from ${mins<1?"just now":mins<60?mins+" min ago":Math.round(mins/60)+" h ago"}. `);
+    const again=document.createElement("button");again.type="button";again.className="linkish";again.textContent="Scan again";
+    again.onclick=()=>{forceFresh=true;form.requestSubmit()};msg.append(again);msg.hidden=false;return;
+  }
+  timerStart();
+  busy=true;go.disabled=true;resetBtn.hidden=true;stepsEl.innerHTML="";stepsEl.hidden=false;say("");hero.classList.add("compact");liveEl.innerHTML="";scanBox.classList.add("working");document.querySelectorAll(".examples button").forEach(x=>x.setAttribute("aria-pressed","false"));
+  try{
+    // 1. SEARCH: resolve name → URL
+    let home=target;
+    if(!/^https?:\/\//i.test(target)&&!/^[\w-]+(\.[\w-]+)+(\/.*)?$/.test(target)){
+      const done=step("resolve","SEARCH",`Finding ${target}'s official site`);
+      const r=await tfRetry("search",{query:`${target} official website`,purpose:"Resolve a company name to its official homepage for a brand guide."});
+      const key=target.toLowerCase().replace(/[^a-z0-9]/g,"");
+      const label=u=>{try{return new URL(u).hostname.replace(/^www\./,"").split(".")[0].replace(/[^a-z0-9]/g,"")}catch(_){return""}};
+      const hit=(r.results||[]).find(x=>{try{const hn=new URL(x.url).hostname.replace(/[^a-z0-9]/g,""),l=label(x.url);return hn.includes(key)||(l.length>3&&key.includes(l))}catch(_){return false}});
+      if(!hit){done("err");const sug=[...new Set((r.results||[]).map(x=>{try{return new URL(x.url).hostname.replace(/^www\./,"")}catch(_){return null}}).filter(h=>h&&!/(wikipedia|wiktionary|reddit|urbandictionary|dictionary|thesaurus|youtube|linkedin|quora|medium\.com|pinterest|imdb|fandom|github|stackoverflow|tripadvisor|yelp|glassdoor|indeed|crunchbase)\./i.test(h)))].slice(0,3);throw{code:"no_match",suggestions:sug}}
+      home=new URL(hit.url).origin+"/";done("ok");
+    }else if(!/^https?:\/\//i.test(home))home="https://"+home;
+    const host=new URL(home).hostname.replace(/^www\./,"");
+    const brandGuess=host.split(".")[0];
+
+    // 2. FETCH: head + copy (parallel), and SEARCH for guidelines + business (parallel)
+    const dHead=step("head","FETCH",`Reading ${host}: head tags, fonts, stylesheets`);
+    const dCopy=step("copy","FETCH","Reading homepage copy for tone of voice");
+    const dG=step("guide","SEARCH","Looking for official brand guidelines");
+    const dB=step("biz","SEARCH","Looking up the business model and latest results");
+    const name=/^https?:|\./.test(target)?brandGuess:target;
+    // Run in parallel (faster), but tick each step the moment its own call returns.
+    const track=(pr,done,ok)=>pr.then(v=>{done(ok(v)?"ok":"err");return v},e=>{done("err");throw e});
+    const first=v=>(v&&v.results||[])[0];
+    const [headR,copyR,gR,bR]=await Promise.allSettled([
+      track(tfRetry("fetch_content",{urls:[home],format:"html",include_selectors:["head"],links:false,image_links:false,iframe_links:false,page_metadata:true,purpose:"Find stylesheets, font files and theme colours for a brand guide."}),dHead,v=>!!first(v)),
+      track(tfRetry("fetch_content",{urls:[home],format:"markdown",links:false,image_links:false,iframe_links:false,page_metadata:false,purpose:"Read headlines and copy to describe tone of voice."}),dCopy,v=>!!(first(v)&&first(v).text)),
+      track(tfRetry("search",{query:`${name} brand guidelines logo colours press kit`,purpose:"Find the company's own brand guideline or press-kit pages."}),dG,()=>true),
+      track(tfRetry("search",{query:`${name} business model revenue latest results`,purpose:"Summarise the company's business model and recent financials."}),dB,()=>true)]);
+    if(headR.status==="rejected"&&copyR.status==="rejected")throw headR.reason;
+    {const errs=[headR,copyR].flatMap(x=>x.status==="fulfilled"?(x.value.errors||[]):[]).map(e=>e.error||"");
+     const none=[headR,copyR].every(x=>x.status!=="fulfilled"||!(x.value.results||[]).length);
+     if(none&&errs.length&&!errs.some(e=>/bot|block|captcha|forbidden/i.test(e)))throw{code:"unreachable",host,reason:errs[0]}}
+    const head=headR.status==="fulfilled"?(headR.value.results||[])[0]:null;
+    const copy=copyR.status==="fulfilled"?(copyR.value.results||[])[0]:null;
+    const h=head?parseHead(head.text||"",home):{css:[],fonts:[],inlineCss:""};
+    const meta=head?.page_metadata||{};
+
+    // Login walls (e.g. Instagram): page loads but shows a sign-in form, so read the brand's own sites instead
+    const homeCopy=(copy&&copy.text)||"";
+    const loginWall=(!!homeCopy&&homeCopy.length<1500&&/(log ?in|sign ?up|password|create (an )?account)/i.test(homeCopy))||/^(sign ?up|log ?in)\b/i.test((copy&&copy.title)||"");
+    // Some sites add their CSS with JavaScript (e.g. Adobe): try common stylesheet locations first
+    let probeText="";
+    if(head&&!h.css.length&&!(h.inlineCss||"").trim()){
+      const dP=step("probe","FETCH","No stylesheets in the page code. Checking common stylesheet locations");
+      const origin=new URL(home).origin;
+      try{const r=await tfRetry("fetch_content",{urls:["/libs/styles/styles.css","/styles/styles.css","/styles.css","/style.css","/css/style.css","/css/main.css","/assets/css/main.css","/static/css/main.css"].map(x=>origin+x),format:"markdown",links:false,image_links:false,iframe_links:false,page_metadata:false,purpose:"Find a site's stylesheet when it is loaded by JavaScript."});
+        for(const x of r.results||[])if(/[{][^{}]*:[^{}]*[}]/.test(x.text||""))probeText+="\n"+x.text}catch(_){}
+      dP(probeText?"ok":"skip");
+    }
+    // Bot protection (e.g. Boots) serves a decoy page with no stylesheets: only a real browser can see the colours
+    const noCss=!!head&&!h.css.length&&!(h.inlineCss||"").trim()&&!probeText;
+    const needAgent=!head||noCss||(!homeCopy&&!loginWall);
+
+    // 3. FETCH: stylesheets + the brand's own guideline/about pages; AGENT starts in parallel if needed
+    const root=host.split(".").slice(-2).join(".");
+    const key=name.toLowerCase().replace(/[^a-z0-9]/g,"");
+    const firstParty=u=>{try{const hn=new URL(u).hostname.toLowerCase();return hn.endsWith(root)||(key.length>2&&hn.replace(/[^a-z0-9]/g,"").includes(key))}catch(_){return false}};
+    const brandy=x=>/brand|guideline|logo|identity|press|media.?kit|design|visual/i.test((x.url||"")+" "+(x.title||""));
+    const userPost=u=>/\/@|\/video\/|\/status\/|\/p\/|\/reel\/|\/watch\?|\/posts?\//i.test(u);
+    const gUrls=gR.status==="fulfilled"?[...new Set((gR.value.results||[]).filter(x=>firstParty(x.url)&&!userPost(x.url)).sort((a,b)=>brandy(b)-brandy(a)).map(x=>x.url))].filter(u=>u.replace(/\/$/,"")!==home.replace(/\/$/,"")).slice(0,loginWall?3:2):[];
+    const cssUrls=h.css.slice(0,6);
+    let agentP=null;
+    if(needAgent){
+      const dA=step("agent","AGENT",noCss?"Site blocks automated readers. Opening it in a real browser (usually 1–3 min)":"Page needs a real browser. Opening it (usually 1–3 min)");
+      agentP=runAgent(home,noCss,t=>{const li=stepsEl.querySelector('[data-k="agent"] .lbl');if(li)li.textContent="Reading the page in a real browser · "+t})
+        .then(r=>{dA(r?"ok":"err");return r},()=>{dA("err");return null});
+    }else if(loginWall)step("wall","FETCH","Homepage is a login wall, so reading the brand's own sites instead")("ok");
+    let cssText=(h.inlineCss||"")+probeText;const gPages=[];let emptyBrand=[];
+    if(cssUrls.length||gUrls.length){
+      const what=[cssUrls.length?`${cssUrls.length} stylesheet${cssUrls.length===1?"":"s"}`:"",gUrls.length?`${gUrls.length} brand page${gUrls.length===1?"":"s"}`:""].filter(Boolean).join(" + ");
+      const dCss=step("css","FETCH",`Reading ${what}`);
+      try{const r=await tfRetry("fetch_content",{urls:[...cssUrls,...gUrls],format:"markdown",links:false,image_links:false,iframe_links:false,page_metadata:false,purpose:"Extract exact colours, fonts and radii from CSS; read official brand rules."});
+        emptyBrand=(r.errors||[]).map(e=>e.url).filter(u=>gUrls.includes(u));
+        for(const x of r.results||[]){if((gUrls.includes(x.url)||gUrls.includes(x.final_url))&&!(x.text||"").trim())emptyBrand.push(x.url);if(gUrls.includes(x.url)||gUrls.includes(x.final_url))gPages.push({url:x.url,text:(x.text||"").slice(0,loginWall?3500:2500)});else cssText+="\n"+(x.text||"")}
+        dCss("ok")}catch(err){dCss("err")}
+    }else step("css","FETCH","No linked stylesheets found (styles may be injected by script)")("skip");
+    const css=parseCss(cssText);
+    const fontFiles=fontFamilies(h.fonts);
+    // Show the colours straight away while the rest is written
+    renderPrelim(name,home,css,h);
+    let brandAgentP=null;
+    const saturated=css.named.filter(([k,v])=>hexSat(v)>.25).length+css.freq.filter(([v])=>hexSat(v)>.25).length;
+    const officialEmpty=emptyBrand.find(u=>/brand|guideline|identity|visual/i.test(u))||emptyBrand[0];
+    if(officialEmpty&&(loginWall||saturated<3)&&!needAgent){
+      const dB2=step("agent-brand","AGENT","Official brand site needs a real browser. Reading its colours and logo rules (1–2 min)");
+      brandAgentP=runAgent(officialEmpty,false,t=>{const li=stepsEl.querySelector('[data-k="agent-brand"] .lbl');if(li)li.textContent="Reading the official brand site in a real browser · "+t},"brand")
+        .then(r=>{dB2(r?"ok":"err");return r},()=>{dB2("err");return null});
+    }
+    const agentRender=await (agentP||null),agentBrand=null; // the brand-site agent is merged in later, so the guide isn't held up
+
+    // 4. CLAUDE: write the guide from the extracted data only
+    stepsEl.hidden=false;
+    const dC=step("claude","CLAUDE","Writing the brand guide from the extracted data");
+    const data={brand_hint:name,homepage:home,
+      head:{theme_color:h.themeColor,tile_color:h.tileColor,mask_icon_color:h.maskColor,favicon:meta.favicon,og_title:meta.og?.title,og_description:meta.og?.description},
+      font_files:fontFiles,css_font_faces:css.faces,css_font_families_by_use:css.families,headline_and_logo_css:css.headlines,css_custom_property_colours:css.named,colour_frequency:css.freq,border_radii:css.radii,
+      homepage_copy:(copy?.text||"").slice(0,4000),
+      agent_render:agentRender,
+      official_brand_site:agentBrand,
+      login_wall:loginWall,
+      guideline_pages:gPages,
+      guideline_search:gR.status==="fulfilled"?(gR.value.results||[]).slice(0,6).map(x=>({title:x.title,url:x.url,snippet:x.snippet})):[],
+      business_search:bR.status==="fulfilled"?(bR.value.results||[]).slice(0,8).map(x=>({title:x.title,url:x.url,snippet:x.snippet,date:x.date})):[]};
+    const {guide:g}=await api("/api/claude",{data});
+    dC("ok");
+    renderLive(g,home,cssUrls,gUrls,{pending:!!brandAgentP});
+    saveScan(target,{g,home,cssUrls,gUrls});
+    if(brandAgentP){
+      const sec=liveEl.firstElementChild,tick=setInterval(()=>{if(liveEl.firstElementChild!==sec)return clearInterval(tick);const el=document.getElementById("officialT");if(el)el.textContent=mmss(Date.now()-timerT0)},1000);
+      brandAgentP.then(ab=>{clearInterval(tick);if(liveEl.firstElementChild!==sec)return; // user moved on
+        const g2=mergeOfficial(g,ab);renderLive(g2||g,home,cssUrls,gUrls,{quiet:true});
+        if(g2){saveScan(target,{g:g2,home,cssUrls,gUrls});say("Official brand palette added.")}});
+    }
+    timerStop(true);
+  }catch(err){
+    if(err&&err.code==="no_match"){
+      msg.innerHTML="";msg.append(`Couldn't find an official website for "${target}". `);
+      if(err.suggestions.length){msg.append("Did you mean: ");err.suggestions.forEach((h,i)=>{const bt=document.createElement("button");bt.type="button";bt.className="linkish";bt.textContent=h;bt.onclick=()=>{input.value=h;form.requestSubmit()};msg.append(bt);if(i<err.suggestions.length-1)msg.append(", ")});msg.append("?")}
+      else msg.append("Check the spelling, or paste the website link instead.");
+      msg.hidden=false;hero.classList.remove("compact");stepsEl.hidden=true;return;
+    }
+    if(err&&err.code==="unreachable"){say(`Couldn't reach ${err.host}. Check the link is spelled right, or type the brand name instead.`);stepsEl.querySelectorAll('[data-s="run"]').forEach(li=>li.dataset.s="err");return}
+    if(err&&typeof err.code==="string"&&["claude_error","invalid_json","refused","empty_completion"].includes(err.code)){
+      const sc={claude_error:"Claude couldn't write the analysis. Press Scan to try again.",invalid_json:"Claude's reply didn't come back in the right format. Press Scan to try again.",refused:"Claude declined to analyse this site.",empty_completion:"Claude returned nothing. Try again."};
+      say(sc[err.code]||"Claude couldn't finish the analysis.");
+    }else say(mcpCopy(err));
+    stepsEl.querySelectorAll('[data-s="run"]').forEach(li=>li.dataset.s="err");
+  }finally{busy=false;go.disabled=false;scanBox.classList.remove("working");if(timerId)timerStop(false);updReset()}
+});
+
+const isHex=v=>/^#[0-9a-fA-F]{6}$/.test(v||"");
+function themeCss(t,ti){
+  ti=ti||{};
+  const c=(k,f)=>isHex(t[k])?t[k]:f;const font=f=>loadFont(f)?`"${f.trim()}"`:'"Inter"';
+  const tFont=okFont(ti.font)?ti.font:t.display;
+  const tw=Math.round(Math.max(300,Math.min(900,+ti.weight||800))/100)*100;
+  const tr=Math.max(-.08,Math.min(.2,isFinite(+ti.tracking)?+ti.tracking:-.02));
+  const tCase=["none","lowercase","uppercase"].includes(ti.case)?ti.case:(["none","lowercase","uppercase"].includes(t.headingCase)?t.headingCase:"none");
+  const titleVars=`;--t-font:${font(tFont)},Arial,sans-serif;--t-weight:${tw};--t-track:${tr}em;--t-case:${tCase};--t-style:${ti.italic===true?"italic":"normal"}${isHex(ti.color)?";--t-color:"+ti.color:""}`;
+  const rad=Math.max(0,Math.min(32,+t.radius||16)),btn=Math.max(0,Math.min(999,+t.btnRadius||12));
+  const kase=["none","lowercase","uppercase"].includes(t.headingCase)?t.headingCase:"none";
+  return `--b-bg:${c("bg","#FFFFFF")};--b-fg:${c("fg","#111111")};--b-sub:${c("sub","#666666")};--b-surface:${c("surface","#F4F4F4")};--b-line:${c("line","#E2E2E2")};--b-accent:${c("accent","#333333")};--b-on-accent:${c("onAccent","#FFFFFF")};--b-display:${font(t.display)},Arial,sans-serif;--b-body:${font(t.body)},Arial,sans-serif;--b-h-weight:800;--b-h3-weight:700;--b-track:-.02em;--b-case:${kase};--b-radius:${rad}px;--b-pill:999px;--b-btn-radius:${btn}px;--b-btn-shadow:none`+titleVars}
+function arr(v){return Array.isArray(v)?v:[]}
+function mergeOfficial(g,ab){ // add the brand site's published palette, typefaces and logo rules to the guide
+  if(!ab)return null;
+  const hx=v=>{const m=String(v||"").trim().match(/^#?([0-9a-f]{6}|[0-9a-f]{3})$/i);if(!m)return null;const h=m[1].length===3?m[1].split("").map(c=>c+c).join(""):m[1];return "#"+h.toUpperCase()};
+  const off=arr(ab.colours).map(c=>({name:c.name||"",hex:hx(c.hex),role:c.usage||"Official palette",source:"guidelines"})).filter(c=>c.hex);
+  const faces=arr(ab.typefaces).filter(x=>typeof x==="string"&&x.trim()).slice(0,3);
+  const rules=arr(ab.logo_rules).filter(x=>typeof x==="string"&&x.trim()).slice(0,4);
+  if(!off.length&&!faces.length&&!rules.length)return null;
+  const seen=new Set(off.map(c=>c.hex)),g2=JSON.parse(JSON.stringify(g));
+  g2.colours=[...off,...arr(g.colours).filter(c=>!seen.has(String(c.hex||"").toUpperCase()))].slice(0,10);
+  if(faces.length){g2.type=g2.type||{};g2.type.rows=[["Official",faces.join(", ")],...arr(g2.type.rows)].slice(0,4)}
+  if(rules.length){g2.logo=g2.logo||{};g2.logo.rules=rules}
+  return g2}
+function renderLive(g,home,cssUrls,gUrls,o){
+  o=o||{};
+  const sMap={site:"s",guidelines:"g"};
+  const b={id:"live-scan",live:true,pending:!!o.pending,quiet:!!o.quiet,name:g.name||new URL(home).hostname,url:home,style:g.style||"Scanned brand",tags:arr(g.tags).slice(0,4),
+    colours:arr(g.colours).filter(c=>isHex(c.hex)).slice(0,10).map(c=>[c.name||c.hex,c.hex.toUpperCase(),c.role||"",sMap[c.source]||"u"]),
+    type:{sample:g.type?.sample||g.name||"",rows:arr(g.type?.rows).filter(Array.isArray),note:g.type?.note||""},
+    logo:{kind:g.logo?.kind||"Not enough data",rules:arr(g.logo?.rules)},
+    ui:arr(g.ui).filter(Array.isArray),voice:{traits:arr(g.voice?.traits),lines:arr(g.voice?.lines),pattern:g.voice?.pattern||""},
+    biz:{model:g.biz?.model||"Not found",period:g.biz?.period||"Latest",metrics:arr(g.biz?.metrics).filter(Array.isArray).slice(0,4),streams:arr(g.biz?.streams),next:g.biz?.next||"",pm:g.biz?.pm||"",src:arr(g.biz?.src).filter(Array.isArray)},
+    cta:g.cta||"Visit site",
+    sources:[[new URL(home).hostname,home],...cssUrls.slice(0,3).map((u,i)=>["Stylesheet "+(i+1),u]),...(gUrls||[]).map((u,i)=>["Brand page "+(i+1),u])],
+    themeCss:themeCss(g.theme||{},g.title||{})};
+  lastGuide={...g,url:home,scanned_with:"TinyFish Search + Fetch, analysis by Claude",sources:b.sources.map(x=>x[1])};
+  showBand(bandHTML(b),o.quiet);if(!o.quiet)revealTitle(titleFont(g.theme,g.title));
+  $("copyJson").onclick=()=>copyText(JSON.stringify(lastGuide,null,2),"Brand guide JSON");
+  $("copyTokens").onclick=()=>copyText(JSON.stringify(tokens(lastGuide),null,2),"Design tokens");
+  say("");
+}
+/* Early preview: the colours parsed from the site's CSS, shown while Claude writes the rest */
+function hexSat(hx){const n=parseInt(hx.slice(1),16),r=n>>16&255,g=n>>8&255,b=n&255,mx=Math.max(r,g,b),mn=Math.min(r,g,b);return mx===0?0:(mx-mn)/mx}
+function renderPrelim(name,home,css,h){
+  const seen=new Set(),cols=[];
+  const add=(n,hx,role)=>{hx=(hx||"").toUpperCase();if(!isHex(hx)||seen.has(hx)||cols.length>=8)return;seen.add(hx);cols.push([n,hx,role,"s"])};
+  for(const [k,v] of css.named)if(hexSat(v)>.25)add(k.replace(/^(color|colour|c)-/,"").replace(/-/g," "),v,"CSS variable");
+  for(const [v,n] of css.freq)if(hexSat(v)>.25)add("Used "+n+"×",v,"Frequent in CSS");
+  for(const [v,n] of css.freq)add("Used "+n+"×",v,"Neutral");
+  if(!cols.length)return;
+  const b={id:"live-scan",live:false,prelim:true,name,url:home,style:"",tags:[],colours:cols,
+    type:{sample:name,rows:css.families.slice(0,3).map(([f,n])=>["Found in CSS",f])},logo:{kind:"",rules:[]},ui:css.radii.slice(0,3).map(([r,n])=>["Corner radius",r+" ("+n+"×)"]),
+    voice:{traits:[],lines:[]},biz:{model:"",period:"",metrics:[],streams:[],pm:"",src:[]},sources:[[hostOf(home),home]],
+    themeCss:themeCss({accent:(cols.find(c=>c[3]==="s"&&hexSat(c[1])>.25)||[])[1]},{})};
+  showBand(bandHTML(b),true);
+}
+const CACHE_MS=24*60*60*1000;
+try{Object.keys(localStorage).filter(k=>k.startsWith("bs-scan:")).forEach(k=>localStorage.removeItem(k))}catch(_){} // clear scans saved by older versions
+try{if(!localStorage.getItem("bs-reset-tiktok-1")){Object.keys(localStorage).filter(k=>k.startsWith("bs-scan2:")&&k.includes("tiktok")).forEach(k=>localStorage.removeItem(k));localStorage.setItem("bs-reset-tiktok-1","1")}}catch(_){} // one-off: forget saved TikTok scans
+function saveScan(target,v){try{localStorage.setItem("bs-scan2:"+target.toLowerCase(),JSON.stringify({t:Date.now(),v}))}catch(_){}}
+function loadScan(target){try{const o=JSON.parse(localStorage.getItem("bs-scan2:"+target.toLowerCase())||"null");return o&&Date.now()-o.t<CACHE_MS?o:null}catch(_){return null}}
+let forceFresh=false;
+function renderRaw(name,home,css,h,meta){
+  const cols=[...css.named.slice(0,6).map(([k,v])=>[k,v,"CSS variable","s"]),...css.freq.slice(0,6).map(([v,n])=>["Used "+n+"×",v,"Frequency in CSS","s"])].slice(0,10);
+  renderLive({name,style:"Raw extraction",tags:[],colours:cols.map(([n,hx,r])=>({name:n,hex:hx,role:r,source:"site"})),theme:{},type:{rows:css.families.map(([f,n])=>["Family",f+" · "+n+" rules"])},ui:css.radii.map(([r,n])=>["Radius",r+" ("+n+"×)"]),biz:{}},home,[],null)}
+function tokens(g){const color={};for(const c of arr(g.colours))if(isHex(c.hex))color[(c.name||c.hex).toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")]={$type:"color",$value:c.hex,$description:c.role||""};
+  return{[(g.name||"brand").toLowerCase()]:{color}}}
+function copyText(t,label){try{navigator.clipboard.writeText(t).then(()=>show("Copied "+label)).catch(()=>show("Copy blocked here"))}catch(_){show("Copy blocked here")}}
+</script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+{
+  "brand": "Revolut",
+  "url": "https://www.revolut.com/",
+  "style": "Fintech-minimal, monochrome-core, premium",
+  "colours": [
+    {
+      "name": "Revolut Black",
+      "hex": "#000000",
+      "role": "primary \u00b7 logo, type",
+      "source": "official guidelines PDF"
+    },
+    {
+      "name": "White",
+      "hex": "#FFFFFF",
+      "role": "primary \u00b7 background, theme-color",
+      "source": "official guidelines PDF + html head"
+    },
+    {
+      "name": "UI Black",
+      "hex": "#191C1F",
+      "role": "UI dark / tile + mask-icon colour",
+      "source": "html head"
+    },
+    {
+      "name": "Deep Blue",
+      "hex": "#1326FD",
+      "role": "core brand blue",
+      "source": "official guidelines PDF"
+    },
+    {
+      "name": "Mid Blue",
+      "hex": "#6FA0FF",
+      "role": "secondary",
+      "source": "official guidelines PDF"
+    },
+    {
+      "name": "Light Blue",
+      "hex": "#C6D9FD",
+      "role": "secondary",
+      "source": "official guidelines PDF"
+    },
+    {
+      "name": "Purple",
+      "hex": "#9539F2",
+      "role": "accent",
+      "source": "official guidelines PDF"
+    },
+    {
+      "name": "Lime",
+      "hex": "#BFFF37",
+      "role": "accent ('wow' highlights)",
+      "source": "official guidelines PDF"
+    }
+  ],
+  "typography": {
+    "display": {
+      "family": "Aeonik Pro",
+      "weights": [
+        "Black",
+        "Black-Capitalised",
+        "Medium",
+        "Regular"
+      ],
+      "source": "live font preloads"
+    },
+    "ui": {
+      "family": "Inter",
+      "weights": [
+        "Regular",
+        "Medium",
+        "SemiBold"
+      ],
+      "source": "live font preloads"
+    },
+    "web_stand_in": "Manrope (display) + Inter"
+  },
+  "logo": {
+    "type": "Wordmark (primary) + 'R' monogram for the app icon",
+    "rules": [
+      "Never lock up wordmark and icon together",
+      "Revolut Black or White only",
+      "Min size 80px / 25mm",
+      "Clear space = width of the 'R'"
+    ],
+    "assets": [
+      "https://assets.revolut.com/Brand/Retail/Logos/Wordmark/Revolut_Black.svg",
+      "https://assets.revolut.com/Brand/Retail/Logos/Wordmark/Revolut_White.svg"
+    ]
+  },
+  "ui": {
+    "theme": "Light (theme-color #FFFFFF), monochrome chrome",
+    "hero": "Full-bleed photography (3840px hero images preloaded)",
+    "pattern": "Headline + one CTA per section; heavy social proof (ratings, awards)"
+  },
+  "voice": {
+    "traits": [
+      "confident",
+      "aspirational",
+      "compact"
+    ],
+    "signals": {
+      "avg_sentence_words": 5.2,
+      "second_person_per_100_words": 9.5
+    },
+    "messaging": [
+      "Banking & Beyond",
+      "This is your bank, redefined.",
+      "Your salary, reimagined",
+      "Life, meets savings",
+      "Ask, and AIR makes it happen"
+    ],
+    "pattern": "Two-to-four-word headlines that twist a familiar phrase ('X, reimagined')"
+  },
+  "business": {
+    "model": "Freemium finance super-app",
+    "streams": [
+      "Paid plans (Plus \u2192 Ultra)",
+      "Card interchange",
+      "FX",
+      "Interest on balances",
+      "Trading & crypto fees",
+      "Business banking (16% of income)"
+    ],
+    "metrics": {
+      "period": "FY2025",
+      "revenue": "$6.0bn (+46%)",
+      "pretax_profit": "$2.3bn (+57%)",
+      "retail_customers": "68.3m (+30%)",
+      "business_customers": "767k",
+      "balances": "$67.5bn (+66%)"
+    },
+    "next": "Full UK banking licence (Mar 2026) \u2192 lending; US bank charter filed; target 100m customers by mid-2027",
+    "source": "https://www.cnbc.com/2026/03/24/revolut-2025-earnings-record-profit.html"
+  },
+  "sources": [
+    "https://www.revolut.com/",
+    "https://developer.revolut.com/docs/resources/open-banking-logo-guidelines",
+    "https://developer.revolut.com/assets/oba/Revolut-Open-Banking-guidelines.pdf"
+  ]
+}
