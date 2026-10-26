@@ -26,9 +26,24 @@ DATA:
 ${JSON.stringify(data)}`;
 
 function firstJson(text) {
-  const s = text.indexOf("{"), e = text.lastIndexOf("}");
+  const t = text.replace(/```(?:json)?/gi, "");
+  const s = t.indexOf("{"), e = t.lastIndexOf("}");
   if (s < 0 || e <= s) return null;
-  try { return JSON.parse(text.slice(s, e + 1)); } catch { return null; }
+  const raw = t.slice(s, e + 1);
+  try { return JSON.parse(raw); } catch {}
+  // Small repairs for common model slips: trailing commas, curly quotes.
+  try { return JSON.parse(raw.replace(/,\s*([}\]])/g, "$1").replace(/[\u201C\u201D]/g, '"')); } catch { return null; }
+}
+
+async function ask(content) {
+  const r = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: { "x-api-key": process.env.ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01", "content-type": "application/json" },
+    body: JSON.stringify({ model: MODEL, max_tokens: 8000, messages: [{ role: "user", content }] }),
+  });
+  const body = await r.json().catch(() => ({}));
+  const text = (body.content || []).filter(c => c.type === "text").map(c => c.text).join("");
+  return { r, body, text };
 }
 
 export async function POST(req) {
@@ -39,18 +54,19 @@ export async function POST(req) {
   const over = await overQuota(req, "guide", Number(process.env.SCANS_PER_VISITOR_PER_DAY || 5), Number(process.env.SCANS_PER_DAY || 100));
   if (over) return fail("rate_limited", over, 429);
 
-  const r = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: { "x-api-key": process.env.ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01", "content-type": "application/json" },
-    body: JSON.stringify({ model: MODEL, max_tokens: 4000, messages: [{ role: "user", content: prompt(b.data) }] }),
-  });
-  const body = await r.json().catch(() => ({}));
+  const content = prompt(b.data);
+  let { r, body, text } = await ask(content);
   if (r.status === 429 || r.status === 529) return fail("rate_limited", "Claude is busy. Wait a minute, then scan again.", 429);
   if (!r.ok) return fail("claude_error", (body.error && body.error.message) || "Claude returned " + r.status, 502);
   if (body.stop_reason === "refusal") return fail("refused", "Claude declined to analyse this site.", 422);
-  const text = (body.content || []).filter(c => c.type === "text").map(c => c.text).join("");
+  let guide = firstJson(text);
+  if (!guide) {
+    // One retry, telling the model what went wrong.
+    const why = body.stop_reason === "max_tokens" ? "Your last reply was cut off for being too long. Keep every string shorter." : "Your last reply was not valid JSON.";
+    ({ r, body, text } = await ask(content + "\n\n" + why + " Reply with ONLY the JSON object: no code fences, no comments, no text before or after it."));
+    if (r.ok) guide = firstJson(text);
+  }
   if (!text.trim()) return fail("empty_completion", "Claude returned nothing.", 502);
-  const guide = firstJson(text);
-  if (!guide) return fail("invalid_json", "Claude's reply wasn't valid JSON.", 502);
+  if (!guide) return fail("invalid_json", "Claude's reply wasn't valid JSON (" + (body.stop_reason || "unknown") + ").", 502);
   return json({ guide });
 }
